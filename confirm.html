@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm subscription — Double Trouble Studios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="index.html" class="brand">
+      <span>DOUBLE TROUBLE <em>STUDIOS</em></span>
+    </a>
+  </nav>
+
+  <main class="confirm-wrap">
+    <p class="eyebrow">Email verification</p>
+    <h1 id="confirm-title">Verifying...</h1>
+    <p id="confirm-desc">Checking your confirmation link.</p>
+    <a href="index.html" class="btn btn-primary">Back to site</a>
+  </main>
+
+  <footer class="footer">
+    <span>&copy; 2026 Double Trouble Studios</span>
+  </footer>
+
+  <script>
+    const SUPA_URL = "https://elifhcqurdemwsbgrxnu.supabase.co";
+    const SUPA_KEY = "eyJhbGci••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••";
+    const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+    async function confirmSubscription() {
+      const title = document.getElementById("confirm-title");
+      const desc = document.getElementById("confirm-desc");
+      const token = new URLSearchParams(location.search).get("token");
+
+      if (!token) {
+        title.textContent = "Invalid link";
+        desc.textContent = "This link is missing its token. Please use the link from your email.";
+        return;
+      }
+
+      const { data, error } = await db.rpc("confirm_subscription", { token_input: token });
+
+      if (error || data !== true) {
+        title.textContent = "Link expired";
+        desc.textContent = "This link is invalid or was already used. Try subscribing again on the main page.";
+        return;
+      }
+
+      title.textContent = "You're in! 🎮";
+      desc.textContent = "Your email is confirmed. Welcome aboard — devlogs and early access news are coming your way.";
+    }
+
+    confirmSubscription();
+  </script>
+</body>
+</html>
