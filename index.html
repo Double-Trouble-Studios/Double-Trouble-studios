@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Double Trouble Studios</title>
+  <meta name="description" content="Double Trouble Studios — an independent game studio. Subscribe for news and early access.">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="#" class="brand">
+      <span>DOUBLE TROUBLE <em>STUDIOS</em></span>
+    </a>
+    <div class="nav-links">
+      <a href="#games">Games</a>
+      <a href="#about">About</a>
+      <a href="#subscribe" class="nav-cta">Subscribe</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <p class="eyebrow">Independent game studio</p>
+    <h1>We make games that<br>cause <span class="accent">double trouble</span>.</h1>
+    <p class="hero-sub">Small team. Big ideas. Follow the journey and get early access to our builds.</p>
+    <div class="hero-actions">
+      <a href="#subscribe" class="btn btn-primary">Get early access</a>
+      <a href="#games" class="btn btn-ghost">See our games</a>
+    </div>
+  </header>
+
+  <main>
+    <section id="games" class="section">
+      <h2><span class="index">01</span> Our games</h2>
+      <div id="game-grid" class="grid"></div>
+    </section>
+
+    <section id="about" class="section">
+      <h2><span class="index">02</span> About the studio</h2>
+      <p class="about-text">
+        Double Trouble Studios is a small independent team building games with Unity.
+        We prototype fast, share our progress openly, and let our community shape what we make next.
+      </p>
+    </section>
+
+    <section id="subscribe" class="section subscribe">
+      <h2><span class="index">03</span> Join the crew</h2>
+      <p>Subscribe to get devlogs, release news and early access invites. We'll send a confirmation link to your email first.</p>
+      <form id="sub-form" class="sub-form" novalidate>
+        <input type="email" id="sub-email" placeholder="you@email.com" autocomplete="email" required>
+        <button type="submit" id="sub-btn" class="btn btn-primary">Subscribe</button>
+      </form>
+      <p id="sub-status" class="sub-status" role="status"></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>&copy; 2026 Double Trouble Studios</span>
+    <span class="footer-dim">Made in Finland 🇫🇮</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
