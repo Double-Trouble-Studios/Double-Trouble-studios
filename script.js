@@ -1,5 +1,5 @@
 // Double Trouble Studios — site logic
-const SUPA_URL = "https://elifhcqurdemwsbgrxnu.supabase.co";
+const SUPA_URL = "https://imkmjbmuboeqpydkygjx.supabase.co";
 const SUPA_KEY = "eyJhbGci••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••";
 
 const db = supabase.createClient(SUPA_URL, SUPA_KEY);
