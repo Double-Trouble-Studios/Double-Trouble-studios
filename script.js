@@ -1,10 +1,9 @@
 // Double Trouble Studios — site logic
 const SUPA_URL = "https://imkmjbmuboeqpydkygjx.supabase.co";
-const SUPA_KEY = "eyJhbGci••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••";
+const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlta21qYm11Ym9lcXB5ZGt5Z2p4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxNTczODMsImV4cCI6MjEwMjczMzM4M30.SD6YAcUrlHY83XnQPbQhibWpsH91_0_1IDrBAZ9znd8";
 
 const db = supabase.createClient(SUPA_URL, SUPA_KEY);
 
-// --- Games grid ---
 async function loadGames() {
   const grid = document.getElementById("game-grid");
   if (!grid) return;
@@ -27,7 +26,6 @@ async function loadGames() {
   `).join("");
 }
 
-// --- Newsletter subscribe ---
 const form = document.getElementById("sub-form");
 if (form) {
   form.addEventListener("submit", async (e) => {
@@ -48,7 +46,6 @@ if (form) {
     btn.disabled = true;
     status.textContent = "Subscribing...";
 
-    // Confirmation token sent in the email link (make.com + Gmail)
     const token = crypto.randomUUID();
     const { error } = await db.from("subscribers")
       .insert([{ email, confirm_token: token, confirmed: false }]);
