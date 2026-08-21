@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Double Trouble Studios</title>
   <meta name="description" content="Double Trouble Studios — an independent game studio. Subscribe for news and early access.">
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -13,7 +14,8 @@
 
   <nav class="nav">
     <a href="#" class="brand">
-      <span>DOUBLE TROUBLE <em>STUDIOS</em></span>
+      <img src="logo.jpg" alt="Double Trouble logo">
+      <span>STUDIOS</span>
     </a>
     <div class="nav-links">
       <a href="#games">Games</a>
@@ -24,6 +26,16 @@
 
   <header class="hero">
     <div class="hero-glow" aria-hidden="true"></div>
+
+    <svg class="deco deco-float" style="top:14%; left:8%; width:50px;" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M2 4h14l6 8-6 8H2l6-8-6-8z" fill="#e5001c" opacity="0.6"/>
+    </svg>
+
+    <svg class="deco deco-float-slow" style="top:18%; right:9%; width:44px;" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M2 4h14l6 8-6 8H2l6-8-6-8z" fill="#ffffff" opacity="0.15"/>
+    </svg>
+
+    <img src="logo.jpg" alt="Double Trouble Studios" class="hero-logo">
     <p class="eyebrow">Independent game studio</p>
     <h1>We make games that<br>cause <span class="accent">double trouble</span>.</h1>
     <p class="hero-sub">Small team. Big ideas. Follow the journey and get early access to our builds.</p>
@@ -60,8 +72,40 @@
 
   <footer class="footer">
     <span>&copy; 2026 Double Trouble Studios</span>
-    <span class="footer-dim">Made in Finland 🇫🇮</span>
   </footer>
+
+  <section class="section admin-section">
+    <div id="admin-gate" class="admin-gate">
+      <svg class="admin-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+        <rect x="3" y="11" width="18" height="11" rx="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      <h3>Studio Access</h3>
+      <p>Enter the key to manage games.</p>
+      <div class="admin-gate-form">
+        <input type="password" id="admin-key" placeholder="Key">
+        <button id="admin-unlock" type="button" class="btn btn-primary">Unlock</button>
+      </div>
+      <p id="admin-gate-error" class="sub-status err hidden"></p>
+    </div>
+
+    <div id="admin-panel" class="admin-panel hidden">
+      <h3>Add a game</h3>
+      <form id="admin-form">
+        <label for="admin-title">Title
+          <input type="text" id="admin-title" required>
+        </label>
+        <label for="admin-desc">Description
+          <textarea id="admin-desc" rows="2"></textarea>
+        </label>
+        <label for="admin-img">Image URL
+          <input type="url" id="admin-img" placeholder="https://...">
+        </label>
+        <button type="submit" class="btn btn-primary">Add game</button>
+        <p id="admin-status" class="sub-status"></p>
+      </form>
+    </div>
+  </section>
 
   <script src="script.js"></script>
 </body>
