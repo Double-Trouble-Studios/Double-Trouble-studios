@@ -299,6 +299,8 @@ h1, h2, h3, .brand span, .btn { font-family: "Rajdhani", "Inter", sans-serif; te
   margin-top: 0.8rem;
 }
 
+.scroll-hint.hidden { display: none; }
+
 .about-text { color: var(--dim); max-width: 44rem; position: relative; z-index: 1; text-transform: none; }
 
 .subscribe {
