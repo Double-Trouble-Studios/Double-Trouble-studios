@@ -20,6 +20,13 @@ const CONTROLLER_ICON = `
 `;
 
 // --- Games grid ---
+function updateScrollHint() {
+  const grid = document.getElementById("game-grid");
+  const hint = document.querySelector(".scroll-hint");
+  if (!grid || !hint) return;
+  hint.classList.toggle("hidden", grid.scrollWidth <= grid.clientWidth + 1);
+}
+
 async function loadGames() {
   const grid = document.getElementById("game-grid");
   if (!grid) return;
@@ -33,6 +40,7 @@ async function loadGames() {
         <span>New games in development — subscribe below to hear about them first.</span>
       </div>
     `;
+    updateScrollHint();
     return;
   }
 
@@ -47,7 +55,11 @@ async function loadGames() {
       </div>
     </article>
   `).join("");
+
+  updateScrollHint();
 }
+
+window.addEventListener("resize", updateScrollHint);
 
 // --- Newsletter subscribe ---
 const form = document.getElementById("sub-form");
@@ -70,6 +82,7 @@ if (form) {
     btn.disabled = true;
     status.textContent = "Subscribing...";
 
+    // Confirmation token sent in the email link (make.com + Gmail)
     const token = crypto.randomUUID();
     const { error } = await db.from("subscribers")
       .insert([{ email, confirm_token: token, confirmed: false }]);
