@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Confirm subscription — Double Trouble Studios</title>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -12,11 +13,13 @@
 
   <nav class="nav">
     <a href="index.html" class="brand">
-      <span>DOUBLE TROUBLE <em>STUDIOS</em></span>
+      <img src="logo.jpg" alt="Double Trouble logo">
+      <span>STUDIOS</span>
     </a>
   </nav>
 
   <main class="confirm-wrap">
+    <img src="logo.jpg" alt="Double Trouble Studios">
     <p class="eyebrow">Email verification</p>
     <h1 id="confirm-title">Verifying...</h1>
     <p id="confirm-desc">Checking your confirmation link.</p>
@@ -51,7 +54,7 @@
         return;
       }
 
-      title.textContent = "You're in! 🎮";
+      title.textContent = "You're in!";
       desc.textContent = "Your email is confirmed. Welcome aboard — devlogs and early access news are coming your way.";
     }
 
