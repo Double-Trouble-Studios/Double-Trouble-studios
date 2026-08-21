@@ -222,6 +222,7 @@ h1, h2, h3, .brand span, .btn { font-family: "Rajdhani", "Inter", sans-serif; te
 /* Games grid — horizontal scroll */
 .grid {
   display: flex;
+  align-items: flex-start;
   gap: 1.4rem;
   overflow-x: auto;
   overflow-y: hidden;
@@ -251,14 +252,15 @@ h1, h2, h3, .brand span, .btn { font-family: "Rajdhani", "Inter", sans-serif; te
   box-shadow: 0 14px 30px -14px rgba(229, 0, 28, 0.5);
 }
 
-.card img, .card-placeholder {
+.card img {
   width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  height: auto;
   display: block;
 }
 
 .card-placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
   background: linear-gradient(135deg, var(--surface-2), var(--surface));
   display: flex;
   align-items: center;
