@@ -121,14 +121,6 @@ h1, h2, h3, .brand span, .btn { font-family: "Rajdhani", "Inter", sans-serif; te
   z-index: 0;
 }
 
-.hero-logo {
-  position: relative;
-  z-index: 1;
-  height: 84px;
-  width: auto;
-  margin-bottom: 1.6rem;
-}
-
 .eyebrow {
   position: relative;
   z-index: 1;
