@@ -219,13 +219,25 @@ h1, h2, h3, .brand span, .btn { font-family: "Rajdhani", "Inter", sans-serif; te
   clip-path: polygon(6px 0, 100% 0, 100% 100%, 0 100%, 0 6px);
 }
 
+/* Games grid — horizontal scroll */
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  display: flex;
   gap: 1.4rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 1rem;
+  scrollbar-color: var(--red) var(--surface);
 }
 
+.grid::-webkit-scrollbar { height: 8px; }
+.grid::-webkit-scrollbar-track { background: var(--surface); border-radius: 999px; }
+.grid::-webkit-scrollbar-thumb { background: var(--red); border-radius: 999px; }
+
 .card {
+  flex: 0 0 auto;
+  width: min(420px, 78vw);
+  scroll-snap-align: start;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -241,7 +253,7 @@ h1, h2, h3, .brand span, .btn { font-family: "Rajdhani", "Inter", sans-serif; te
 
 .card img, .card-placeholder {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   display: block;
 }
@@ -260,7 +272,7 @@ h1, h2, h3, .brand span, .btn { font-family: "Rajdhani", "Inter", sans-serif; te
 .card-body p { color: var(--dim); font-size: 0.92rem; text-transform: none; }
 
 .grid-empty {
-  grid-column: 1 / -1;
+  flex: 1 1 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -275,6 +287,13 @@ h1, h2, h3, .brand span, .btn { font-family: "Rajdhani", "Inter", sans-serif; te
 
 .grid-empty svg { width: 64px; height: 64px; opacity: 0.85; }
 .grid-empty span { text-transform: none; }
+
+.scroll-hint {
+  color: var(--dim);
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: 0.8rem;
+}
 
 .about-text { color: var(--dim); max-width: 44rem; position: relative; z-index: 1; text-transform: none; }
 
