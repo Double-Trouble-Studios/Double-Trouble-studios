@@ -83,6 +83,8 @@ h1, h2, h3, .brand span, .btn { font-family: "Rajdhani", "Inter", sans-serif; te
 
 .brand em { font-style: normal; color: var(--red); }
 
+.nav-end { justify-content: flex-end; }
+
 .nav-links { display: flex; align-items: center; gap: 1.4rem; }
 
 .nav-links a {
