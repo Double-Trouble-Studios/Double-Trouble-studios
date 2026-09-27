@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Confirm subscription — Double Trouble Studios</title>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>Double Trouble Studios</title>
+  <link rel="icon" href="logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -12,14 +13,16 @@
 
   <nav class="nav">
     <a href="index.html" class="brand">
+      <img src="logo.jpg" alt="">
       <span>DOUBLE TROUBLE <em>STUDIOS</em></span>
     </a>
   </nav>
 
   <main class="confirm-wrap">
-    <p class="eyebrow">Email verification</p>
+    <img src="logo.jpg" alt="Double Trouble Studios">
+    <p class="eyebrow" id="confirm-eyebrow">One moment</p>
     <h1 id="confirm-title">Verifying...</h1>
-    <p id="confirm-desc">Checking your confirmation link.</p>
+    <p id="confirm-desc">Checking your link.</p>
     <a href="index.html" class="btn btn-primary">Back to site</a>
   </main>
 
@@ -28,34 +31,71 @@
   </footer>
 
   <script>
-    const SUPA_URL = "https://imkmjbmuboeqpydkygjx.supabase.co";
-    const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlta21qYm11Ym9lcXB5ZGt5Z2p4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxNTczODMsImV4cCI6MjEwMjczMzM4M30.SD6YAcUrlHY83XnQPbQhibWpsH91_0_1IDrBAZ9znd8";
+    const SUPA_URL = "https://xemwnccaqxnttrabdayh.supabase.co";
+    const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlbXduY2NhcXhudHRyYWJkYXloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0NTczMTksImV4cCI6MjEwNjAzMzMxOX0.mawkXgP9IrL0_Yhj3OiW94v6LwthNrzJfFIwsUVRCIM";
     const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+    const SESSION_KEY = "dts_session";
 
-    async function confirmSubscription() {
-      const title = document.getElementById("confirm-title");
-      const desc = document.getElementById("confirm-desc");
-      const token = new URLSearchParams(location.search).get("token");
-
-      if (!token) {
-        title.textContent = "Invalid link";
-        desc.textContent = "This link is missing its token. Please use the link from your email.";
-        return;
-      }
-
-      const { data, error } = await db.rpc("confirm_subscription", { token_input: token });
-
-      if (error || data !== true) {
-        title.textContent = "Link expired";
-        desc.textContent = "This link is invalid or was already used. Try subscribing again on the main page.";
-        return;
-      }
-
-      title.textContent = "You're in! 🎮";
-      desc.textContent = "Your email is confirmed. Welcome aboard — devlogs and early access news are coming your way.";
+    function setResult(eyebrow, title, desc) {
+      document.getElementById("confirm-eyebrow").textContent = eyebrow;
+      document.getElementById("confirm-title").textContent = title;
+      document.getElementById("confirm-desc").textContent = desc;
     }
 
-    confirmSubscription();
+    async function handleUnsubscribe(unsubToken) {
+      setResult("Unsubscribing", "One moment...", "Removing you from the list.");
+      const { data, error } = await db.rpc("unsubscribe", { token_input: unsubToken });
+
+      if (error || data !== true) {
+        setResult("Unsubscribe", "Link expired", "This unsubscribe link is invalid or was already used.");
+        return;
+      }
+
+      try { localStorage.removeItem(SESSION_KEY); } catch {}
+      setResult("Unsubscribed", "You're off the list", "Sorry to see you go. You can always join again from the main page.");
+    }
+
+    async function handleMagicLink(token) {
+      const { data, error } = await db.rpc("verify_magic_link", { token_input: token });
+
+      if (error || !data || !data.ok) {
+        setResult("Email verification", "Link expired", "This link is invalid or was already used. Head back to the main page to get a new one.");
+        return;
+      }
+
+      try {
+        localStorage.setItem(SESSION_KEY, JSON.stringify({
+          email: data.email,
+          session_token: data.session_token,
+        }));
+      } catch { /* private mode — session just won't persist across visits */ }
+
+      if (data.welcome) {
+        setResult("Email verification", "You're in! 🎮", "Your email is confirmed and you're signed in on this device. Welcome aboard — devlogs and early access news are coming your way.");
+      } else {
+        setResult("Signed in", "Welcome back! 🎮", "You're signed in on this device. Head back to the site to see what's new.");
+      }
+    }
+
+    async function run() {
+      const params = new URLSearchParams(location.search);
+      const unsubToken = params.get("unsub");
+      const token = params.get("token");
+
+      if (unsubToken) {
+        await handleUnsubscribe(unsubToken);
+        return;
+      }
+
+      if (!token) {
+        setResult("Invalid link", "Invalid link", "This link is missing its token. Please use the link from your email.");
+        return;
+      }
+
+      await handleMagicLink(token);
+    }
+
+    run();
   </script>
 </body>
 </html>

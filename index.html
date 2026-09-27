@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Double Trouble Studios</title>
-  <meta name="description" content="Double Trouble Studios — an independent game studio. Subscribe for news and early access.">
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta name="description" content="Double Trouble Studios — an independent game studio. Join the crew for devlogs and early access.">
+  <link rel="icon" href="logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -13,12 +14,18 @@
 
   <nav class="nav">
     <a href="#" class="brand">
+      <img src="logo.jpg" alt="">
       <span>DOUBLE TROUBLE <em>STUDIOS</em></span>
     </a>
     <div class="nav-links">
       <a href="#games">Games</a>
       <a href="#about">About</a>
-      <a href="#subscribe" class="nav-cta">Subscribe</a>
+      <a href="#crew" class="nav-cta" id="nav-cta">Join the crew</a>
+      <div class="nav-member hidden" id="nav-member">
+        <span class="dot"></span>
+        <span class="email" id="nav-member-email"></span>
+        <button id="nav-logout">Log out</button>
+      </div>
     </div>
   </nav>
 
@@ -26,9 +33,9 @@
     <div class="hero-glow" aria-hidden="true"></div>
     <p class="eyebrow">Independent game studio</p>
     <h1>We make games that<br>cause <span class="accent">double trouble</span>.</h1>
-    <p class="hero-sub">Small team. Big ideas. Follow the journey and get early access to our builds.</p>
+    <p class="hero-sub">Small team. Big ideas. Join the crew to follow the journey and unlock early access builds.</p>
     <div class="hero-actions">
-      <a href="#subscribe" class="btn btn-primary">Get early access</a>
+      <a href="#crew" class="btn btn-primary">Get early access</a>
       <a href="#games" class="btn btn-ghost">See our games</a>
     </div>
   </header>
@@ -37,6 +44,7 @@
     <section id="games" class="section">
       <h2><span class="index">01</span> Our games</h2>
       <div id="game-grid" class="grid"></div>
+      <p class="scroll-hint hidden">Slide to see more →</p>
     </section>
 
     <section id="about" class="section">
@@ -47,14 +55,29 @@
       </p>
     </section>
 
-    <section id="subscribe" class="section subscribe">
+    <section id="crew" class="section subscribe">
       <h2><span class="index">03</span> Join the crew</h2>
-      <p>Subscribe to get devlogs, release news and early access invites. We'll send a confirmation link to your email first.</p>
-      <form id="sub-form" class="sub-form" novalidate>
-        <input type="email" id="sub-email" placeholder="you@email.com" autocomplete="email" required>
-        <button type="submit" id="sub-btn" class="btn btn-primary">Subscribe</button>
-      </form>
-      <p id="sub-status" class="sub-status" role="status"></p>
+
+      <div class="member-panel" id="guest-panel">
+        <p class="lead">One email, no password. We'll send you a link — click it to join and you're signed in on this device, every time you come back.</p>
+        <form id="sub-form" class="sub-form" novalidate>
+          <input type="email" id="sub-email" placeholder="you@email.com" autocomplete="email" required>
+          <button type="submit" id="sub-btn" class="btn btn-primary">Continue</button>
+        </form>
+        <p id="sub-status" class="sub-status" role="status"></p>
+      </div>
+
+      <div class="member-panel hidden" id="member-panel">
+        <div class="member-welcome">
+          <div class="member-avatar" id="member-avatar"></div>
+          <div>
+            <h3 id="member-title" style="font-size:1.2rem; text-transform:none; letter-spacing:0;">Welcome back!</h3>
+            <p style="margin:2px 0 0; color:var(--muted);" id="member-email"></p>
+            <span class="member-badge">Early access unlocked</span>
+          </div>
+        </div>
+        <button class="member-logout" id="member-logout">Log out</button>
+      </div>
     </section>
   </main>
 
