@@ -30,13 +30,16 @@
   </nav>
 
   <header class="hero">
-    <p class="eyebrow">Independent game studio</p>
-    <h1>Small team.<br>Honest games, made <em>in the open.</em></h1>
-    <p class="hero-sub">We build with Unity, ship rough prototypes early, and let the people who play them decide what comes next. Join the crew to follow along and unlock early access builds.</p>
-    <div class="hero-actions">
-      <a href="#crew" class="btn btn-primary">Get early access</a>
-      <a href="#games" class="btn btn-ghost">See our games</a>
+    <div class="hero-main">
+      <p class="eyebrow">No. 001 — Independent studio</p>
+      <h1>We make<br>games. <span class="outline">Some</span><br>work out.</h1>
+      <p class="hero-sub">Small team, built with Unity. We prototype in public and let the people who play decide what ships next.</p>
+      <div class="hero-actions">
+        <a href="#crew" class="btn btn-primary">Get early access</a>
+        <a href="#games" class="btn btn-ghost">See our games</a>
+      </div>
     </div>
+    <div class="hero-rail">Double Trouble Studios — Est. Finland — Unity Games</div>
   </header>
 
   <main>
@@ -47,43 +50,47 @@
     </section>
 
     <section id="about" class="section">
-      <h2>About the studio <span class="index">02</span></h2>
-      <p class="about-text">
-        Double Trouble Studios is a small independent team building games with Unity.
-        We prototype fast, share our progress <strong>openly</strong>, and let our
-        community shape what we make next.
-      </p>
+      <div class="section-inner">
+        <h2 style="padding-bottom: 5vh;">About the studio <span class="index">02</span></h2>
+        <p class="about-text">
+          Double Trouble Studios is a small independent team building games with Unity.
+          We prototype fast, share our progress <strong>openly</strong>, and let our
+          community shape what we make next.
+        </p>
+      </div>
     </section>
 
     <section id="crew" class="section subscribe">
-      <h2>Join the crew <span class="index">03</span></h2>
+      <div class="section-inner">
+        <h2 style="padding-bottom: 5vh;">Join the crew <span class="index">03</span></h2>
 
-      <div class="member-panel" id="guest-panel">
-        <p class="lead">One email, no password. We'll send you a link — click it once and you're signed in on this device, every time you come back.</p>
-        <form id="sub-form" class="sub-form" novalidate>
-          <input type="email" id="sub-email" placeholder="you@email.com" autocomplete="email" required>
-          <button type="submit" id="sub-btn" class="btn btn-primary">Continue</button>
-        </form>
-        <p id="sub-status" class="sub-status" role="status"></p>
-      </div>
-
-      <div class="member-panel hidden" id="member-panel">
-        <div class="member-welcome">
-          <div class="member-avatar" id="member-avatar"></div>
-          <div>
-            <h3 id="member-title" style="font-size:1.15rem;">Welcome back</h3>
-            <p style="margin:2px 0 0; color:var(--muted); font-size:0.9rem;" id="member-email"></p>
-            <span class="member-badge">Early access unlocked</span>
-          </div>
+        <div class="member-panel" id="guest-panel">
+          <p class="lead">One email, no password. We'll send a link — click it once and you're signed in on this device, every time you return.</p>
+          <form id="sub-form" class="sub-form" novalidate>
+            <input type="email" id="sub-email" placeholder="you@email.com" autocomplete="email" required>
+            <button type="submit" id="sub-btn" class="btn btn-primary">Continue</button>
+          </form>
+          <p id="sub-status" class="sub-status" role="status"></p>
         </div>
-        <button class="member-logout" id="member-logout">Log out</button>
+
+        <div class="member-panel hidden" id="member-panel">
+          <div class="member-welcome">
+            <div class="member-avatar" id="member-avatar"></div>
+            <div>
+              <h3 id="member-title" style="font-size:1.1rem;">Welcome back</h3>
+              <p style="margin:2px 0 0; color:var(--muted); font-family:var(--font-mono); font-size:0.85rem;" id="member-email"></p>
+              <span class="member-badge">Early access unlocked</span>
+            </div>
+          </div>
+          <button class="member-logout" id="member-logout">Log out</button>
+        </div>
       </div>
     </section>
   </main>
 
   <footer class="footer">
     <span>&copy; 2026 Double Trouble Studios</span>
-    <span class="footer-dim">Made in Finland 🇫🇮</span>
+    <span class="footer-dim">Made in Finland</span>
   </footer>
 
   <script src="script.js"></script>
