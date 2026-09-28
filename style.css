@@ -454,3 +454,83 @@ a { color: inherit; }
   .section { padding: 7vh 5vw; }
   .member-panel { padding: 26px 22px; }
 }
+
+/* ---------- Principles / roadmap / FAQ ---------- */
+.cards-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 22px;
+}
+.tile {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--accent);
+  padding: 26px 24px 28px;
+}
+.tile h3 { font-size: 0.95rem; margin-bottom: 12px; }
+.tile p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+.roadmap {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0;
+  border: 1px solid var(--line);
+}
+.step {
+  padding: 24px 22px 26px;
+  border-right: 1px solid var(--line);
+  background: var(--panel);
+  position: relative;
+}
+.step:last-child { border-right: none; }
+.step-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.step h3 { font-size: 0.95rem; margin-bottom: 10px; }
+.step p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+.step.done { border-top: 3px solid var(--accent-2); }
+.step.done .step-tag { color: var(--accent-2); }
+.step.active { border-top: 3px solid var(--accent); background: var(--accent-dim); }
+.step.active .step-tag { color: var(--accent); }
+.step:not(.done):not(.active) { border-top: 3px solid var(--line); }
+
+.faq { max-width: 760px; border-top: 1px solid var(--line); }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 20px 4px;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1.05rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: "+";
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+.faq details[open] summary::after { content: "–"; }
+.faq summary:hover { color: var(--accent); }
+.faq details p { margin: 0 4px 20px; color: var(--muted); max-width: 60ch; }
+.faq details a { color: var(--accent-2); }
+
+@media (max-width: 760px) {
+  .step { border-right: none; border-bottom: 1px solid var(--line); }
+  .step:last-child { border-bottom: none; }
+}
