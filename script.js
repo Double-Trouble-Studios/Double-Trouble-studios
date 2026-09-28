@@ -102,6 +102,7 @@ function showMember(email) {
 }
 
 function showGuest() {
+  showDevlogLocked();
   const nav = document.getElementById("nav-member");
   const navCta = document.getElementById("nav-cta");
   const guestPanel = document.getElementById("guest-panel");
@@ -129,6 +130,7 @@ async function checkSession() {
   }
 
   showMember(data.email);
+  loadDevlog(session.session_token);
 }
 
 function bindLogout(id) {
@@ -187,22 +189,34 @@ function escapeHtml(str) {
   ));
 }
 
-async function loadDevlog() {
+function showDevlogLocked() {
+  const list = document.getElementById("devlog-list");
+  if (!list) return;
+  list.innerHTML = `
+    <div class="grid-empty">
+      Members only — join the crew below to read the devlog.
+      <a href="#crew" class="btn btn-primary">Join the crew</a>
+    </div>
+  `;
+}
+
+async function loadDevlog(sessionToken) {
   const list = document.getElementById("devlog-list");
   if (!list) return;
 
-  const { data, error } = await db
-    .from("devlog_posts")
-    .select("id,title,body,published_at")
-    .order("published_at", { ascending: false })
-    .limit(10);
+  const { data, error } = await db.rpc("get_devlog", { session_token_input: sessionToken });
 
-  if (error || !data || data.length === 0) {
-    list.innerHTML = `<div class="grid-empty">First devlog coming soon — join the crew below to get it in your inbox.</div>`;
+  if (error || !data || !data.ok) {
+    list.innerHTML = `<div class="grid-empty">The devlog is unavailable right now. Try again later.</div>`;
     return;
   }
 
-  list.innerHTML = data.map(p => {
+  if (!data.posts || data.posts.length === 0) {
+    list.innerHTML = `<div class="grid-empty">First devlog coming soon.</div>`;
+    return;
+  }
+
+  list.innerHTML = data.posts.map(p => {
     const date = new Date(p.published_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
     return `
       <article class="post">
@@ -217,5 +231,4 @@ async function loadDevlog() {
 }
 
 loadGames();
-loadDevlog();
 checkSession();

@@ -557,3 +557,14 @@ a { color: inherit; }
 @media (max-width: 600px) {
   .post { grid-template-columns: 1fr; gap: 8px; }
 }
+
+.lock-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 3px 8px;
+}
+.grid-empty .btn { margin-top: 6px; }
