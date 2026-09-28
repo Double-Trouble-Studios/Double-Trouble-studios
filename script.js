@@ -180,5 +180,42 @@ if (form) {
   });
 }
 
+// --- Devlog ---
+function escapeHtml(str) {
+  return String(str ?? "").replace(/[&<>"']/g, c => (
+    { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
+  ));
+}
+
+async function loadDevlog() {
+  const list = document.getElementById("devlog-list");
+  if (!list) return;
+
+  const { data, error } = await db
+    .from("devlog_posts")
+    .select("id,title,body,published_at")
+    .order("published_at", { ascending: false })
+    .limit(10);
+
+  if (error || !data || data.length === 0) {
+    list.innerHTML = `<div class="grid-empty">First devlog coming soon — join the crew below to get it in your inbox.</div>`;
+    return;
+  }
+
+  list.innerHTML = data.map(p => {
+    const date = new Date(p.published_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+    return `
+      <article class="post">
+        <time class="post-date" datetime="${escapeHtml(p.published_at)}">${date}</time>
+        <div>
+          <h3>${escapeHtml(p.title)}</h3>
+          <p>${escapeHtml(p.body)}</p>
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
 loadGames();
+loadDevlog();
 checkSession();
