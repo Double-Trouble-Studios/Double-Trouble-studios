@@ -535,3 +535,60 @@ a { color: inherit; }
   .section { padding: 7vh 5vw; }
   .member-panel { padding: 24px 22px; }
 }
+
+/* ---------- Member counter ---------- */
+.member-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: var(--yellow);
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  padding: 7px 16px;
+  transform: rotate(-1deg);
+}
+.member-count::before {
+  content: "\1F389";
+  font-size: 0.95rem;
+}
+
+/* ---------- Easter egg: chaos mode ---------- */
+@keyframes chaos-wobble {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-3deg) translateY(-2px); }
+  40% { transform: rotate(3deg) translateY(2px); }
+  60% { transform: rotate(-2deg); }
+  80% { transform: rotate(2deg); }
+}
+
+body.chaos-mode .card,
+body.chaos-mode .tile,
+body.chaos-mode .step,
+body.chaos-mode .post,
+body.chaos-mode .member-panel,
+body.chaos-mode .faq details,
+body.chaos-mode .btn,
+body.chaos-mode .brand img {
+  animation: chaos-wobble 0.5s ease-in-out infinite;
+}
+body.chaos-mode .card:nth-child(2n) { animation-delay: 0.08s; }
+body.chaos-mode .card:nth-child(3n) { animation-delay: 0.16s; }
+body.chaos-mode .tile:nth-child(2n) { animation-delay: 0.1s; }
+body.chaos-mode { filter: saturate(1.4); }
+
+@media (prefers-reduced-motion: reduce) {
+  body.chaos-mode .card,
+  body.chaos-mode .tile,
+  body.chaos-mode .step,
+  body.chaos-mode .post,
+  body.chaos-mode .member-panel,
+  body.chaos-mode .faq details,
+  body.chaos-mode .btn,
+  body.chaos-mode .brand img {
+    animation: none;
+  }
+}
