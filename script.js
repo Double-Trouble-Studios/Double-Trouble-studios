@@ -62,6 +62,19 @@ async function loadGames() {
 
 window.addEventListener("resize", updateScrollHint);
 
+// --- Member count (social proof) ---
+async function loadMemberCount() {
+  const el = document.getElementById("member-count");
+  if (!el) return;
+
+  const { data, error } = await db.rpc("get_member_count");
+  if (error || !data || typeof data.count !== "number" || data.count < 1) return;
+
+  const noun = data.count === 1 ? "troublemaker" : "troublemakers";
+  el.textContent = `${data.count.toLocaleString("en-US")} ${noun} already causing chaos with us`;
+  el.classList.remove("hidden");
+}
+
 // --- Session helpers ---
 function readSession() {
   try {
@@ -179,8 +192,82 @@ if (form) {
     status.textContent = "Check your inbox! Click the link we just sent to join or sign in.";
     status.classList.add("ok");
     emailInput.value = "";
+    launchConfetti();
   });
 }
+
+// --- Confetti burst (small delight, no library) ---
+function launchConfetti() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const colors = ["#ff4d8d", "#2f6fed", "#ffd23f", "#2fd490", "#1a1a2e"];
+  const canvas = document.createElement("canvas");
+  canvas.style.cssText = "position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:999;";
+  document.body.appendChild(canvas);
+
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  const pieces = Array.from({ length: 90 }, () => ({
+    x: window.innerWidth / 2 + (Math.random() - 0.5) * 120,
+    y: window.innerHeight * 0.35,
+    vx: (Math.random() - 0.5) * 9,
+    vy: Math.random() * -9 - 4,
+    size: Math.random() * 7 + 4,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    rotation: Math.random() * Math.PI,
+    spin: (Math.random() - 0.5) * 0.3,
+  }));
+
+  const gravity = 0.28;
+  let frame = 0;
+  const maxFrames = 130;
+
+  function tick() {
+    frame++;
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    for (const p of pieces) {
+      p.vy += gravity;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rotation += p.spin;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rotation);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+      ctx.restore();
+    }
+    if (frame < maxFrames) {
+      requestAnimationFrame(tick);
+    } else {
+      canvas.remove();
+    }
+  }
+  requestAnimationFrame(tick);
+}
+
+// --- Easter egg: type "trouble" anywhere on the page ---
+(function setupTroubleEgg() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const target = "trouble";
+  let buffer = "";
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key.length !== 1) return;
+    buffer = (buffer + e.key.toLowerCase()).slice(-target.length);
+    if (buffer === target) {
+      buffer = "";
+      document.body.classList.add("chaos-mode");
+      launchConfetti();
+      setTimeout(() => document.body.classList.remove("chaos-mode"), 2600);
+    }
+  });
+})();
 
 // --- Devlog ---
 function escapeHtml(str) {
@@ -231,4 +318,5 @@ async function loadDevlog(sessionToken) {
 }
 
 loadGames();
+loadMemberCount();
 checkSession();
