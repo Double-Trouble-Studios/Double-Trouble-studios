@@ -200,7 +200,7 @@ if (form) {
 function launchConfetti() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  const colors = ["#c4281c", "#15130f", "#e1d9c2", "#8c8672", "#c4281c"];
+  const colors = ["#e4002b", "#ffffff", "#8c001a", "#9b9ba4", "#e4002b"];
   const canvas = document.createElement("canvas");
   canvas.style.cssText = "position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:999;";
   document.body.appendChild(canvas);
