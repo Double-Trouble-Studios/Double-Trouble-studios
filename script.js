@@ -34,6 +34,9 @@ async function loadGames() {
 
   const { data, error } = await db.from("games").select("*").order("id");
 
+  const gamesStat = document.getElementById("stat-games");
+  if (gamesStat) gamesStat.textContent = !error && data ? String(data.length) : "\u2013";
+
   if (error || !data || data.length === 0) {
     grid.innerHTML = `
       <div class="grid-empty">
@@ -73,6 +76,13 @@ async function loadMemberCount() {
   const noun = data.count === 1 ? "troublemaker" : "troublemakers";
   el.textContent = `${data.count.toLocaleString("en-US")} ${noun} already causing chaos with us`;
   el.classList.remove("hidden");
+
+  const statWrap = document.getElementById("stat-members-wrap");
+  const statNum = document.getElementById("stat-members");
+  if (statWrap && statNum) {
+    statNum.textContent = data.count.toLocaleString("en-US");
+    statWrap.classList.remove("hidden");
+  }
 }
 
 // --- Session helpers ---
@@ -95,18 +105,21 @@ function clearSession() {
   try { localStorage.removeItem(SESSION_KEY); } catch {}
 }
 
+function setGuestOnly(visible) {
+  document.querySelectorAll(".guest-only").forEach(el => el.classList.toggle("hidden", !visible));
+}
+
 function showMember(email) {
   const nav = document.getElementById("nav-member");
   const navCta = document.getElementById("nav-cta");
-  const guestPanel = document.getElementById("guest-panel");
   const memberPanel = document.getElementById("member-panel");
 
+  setGuestOnly(false);
   if (nav) {
     nav.classList.remove("hidden");
     document.getElementById("nav-member-email").textContent = email;
   }
   if (navCta) navCta.classList.add("hidden");
-  if (guestPanel) guestPanel.classList.add("hidden");
   if (memberPanel) {
     memberPanel.classList.remove("hidden");
     document.getElementById("member-email").textContent = email;
@@ -118,12 +131,11 @@ function showGuest() {
   showDevlogLocked();
   const nav = document.getElementById("nav-member");
   const navCta = document.getElementById("nav-cta");
-  const guestPanel = document.getElementById("guest-panel");
   const memberPanel = document.getElementById("member-panel");
 
+  setGuestOnly(true);
   if (nav) nav.classList.add("hidden");
   if (navCta) navCta.classList.remove("hidden");
-  if (guestPanel) guestPanel.classList.remove("hidden");
   if (memberPanel) memberPanel.classList.add("hidden");
 }
 
@@ -157,44 +169,149 @@ function bindLogout(id) {
 bindLogout("nav-logout");
 bindLogout("member-logout");
 
-// --- Join / log in form (same form does both) ---
-const form = document.getElementById("sub-form");
-if (form) {
+// --- Join / log in forms (same flow for every form on the page) ---
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const COOLDOWN_SECONDS = 30;
+const LAST_REQUEST_KEY = "dts_last_request";
+
+function setupSignup(root) {
+  const form = root.querySelector(".sub-form");
+  const input = form.querySelector('input[name="email"]');
+  const honeypot = form.querySelector('input[name="website"]');
+  const btn = form.querySelector('button[type="submit"]');
+  const label = btn.querySelector(".btn-label");
+  const status = root.querySelector(".sub-status");
+  const note = root.querySelector(".sub-note");
+  const success = root.querySelector(".sub-success");
+  const echo = root.querySelector(".sub-email-echo");
+  const resend = root.querySelector(".sub-resend");
+  const count = root.querySelector(".count");
+  const change = root.querySelector(".sub-change");
+  const idleLabel = label.textContent;
+  let currentEmail = "";
+  let timer = null;
+
+  function say(text, kind) {
+    status.className = "sub-status" + (kind ? " " + kind : "");
+    status.textContent = text;
+  }
+
+  function startCooldown() {
+    clearInterval(timer);
+    let left = COOLDOWN_SECONDS;
+    resend.disabled = true;
+    resend.innerHTML = 'resend in <span class="count">' + left + "</span>s";
+    timer = setInterval(() => {
+      left -= 1;
+      if (left <= 0) {
+        clearInterval(timer);
+        resend.disabled = false;
+        resend.textContent = "resend the link";
+      } else {
+        resend.innerHTML = 'resend in <span class="count">' + left + "</span>s";
+      }
+    }, 1000);
+  }
+
+  function showSuccess(email) {
+    currentEmail = email;
+    echo.textContent = email;
+    form.classList.add("hidden");
+    status.classList.add("hidden");
+    if (note) note.classList.add("hidden");
+    success.classList.remove("hidden");
+    startCooldown();
+  }
+
+  function reset() {
+    clearInterval(timer);
+    success.classList.add("hidden");
+    form.classList.remove("hidden");
+    status.classList.remove("hidden");
+    if (note) note.classList.remove("hidden");
+    say("");
+    input.value = "";
+    input.focus();
+  }
+
+  async function request(email) {
+    let last = 0;
+    try { last = Number(sessionStorage.getItem(LAST_REQUEST_KEY)) || 0; } catch {}
+    const wait = COOLDOWN_SECONDS * 1000 - (Date.now() - last);
+    if (wait > 0) {
+      return { error: { message: "cooldown", seconds: Math.ceil(wait / 1000) } };
+    }
+    const result = await db.rpc("request_access", { email_input: email });
+    if (!result.error) {
+      try { sessionStorage.setItem(LAST_REQUEST_KEY, String(Date.now())); } catch {}
+    }
+    return result;
+  }
+
+  input.addEventListener("input", () => {
+    if (status.classList.contains("err")) say("");
+    input.removeAttribute("aria-invalid");
+  });
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    const email = input.value.trim().toLowerCase();
 
-    const emailInput = document.getElementById("sub-email");
-    const status = document.getElementById("sub-status");
-    const btn = document.getElementById("sub-btn");
-    const email = emailInput.value.trim().toLowerCase();
+    if (!EMAIL_RE.test(email)) {
+      say("Enter a valid email address, like you@email.com.", "err");
+      input.setAttribute("aria-invalid", "true");
+      input.focus();
+      return;
+    }
 
-    status.className = "sub-status";
-    if (!email || !email.includes("@") || !email.includes(".")) {
-      status.textContent = "Please enter a valid email address.";
-      status.classList.add("err");
+    // Bots fill the hidden field. Pretend it worked and send nothing.
+    if (honeypot && honeypot.value) {
+      showSuccess(email);
       return;
     }
 
     btn.disabled = true;
-    status.textContent = "Sending your link...";
+    btn.classList.add("loading");
+    label.textContent = "Sending";
+    say("");
 
-    const { error } = await db.rpc("request_access", { email_input: email });
+    const { error } = await request(email);
 
     btn.disabled = false;
+    btn.classList.remove("loading");
+    label.textContent = idleLabel;
 
+    if (error && error.message === "cooldown") {
+      say("You just asked for a link. Check your inbox, or try again in " + error.seconds + "s.", "err");
+      return;
+    }
     if (error) {
-      status.textContent = "Something went wrong — please try again.";
-      status.classList.add("err");
+      say("Something went wrong. Please try again in a moment.", "err");
       console.error(error);
       return;
     }
 
-    status.textContent = "Check your inbox! Click the link we just sent to join or sign in.";
-    status.classList.add("ok");
-    emailInput.value = "";
+    showSuccess(email);
     launchConfetti();
   });
+
+  resend.addEventListener("click", async () => {
+    if (resend.disabled || !currentEmail) return;
+    resend.disabled = true;
+    resend.textContent = "sending...";
+    const { error } = await request(currentEmail);
+    if (error && error.message !== "cooldown") {
+      resend.disabled = false;
+      resend.textContent = "failed, try again";
+      return;
+    }
+    startCooldown();
+  });
+
+  change.addEventListener("click", reset);
 }
+
+document.querySelectorAll("[data-signup]").forEach(setupSignup);
 
 // --- Confetti burst (small delight, no library) ---
 function launchConfetti() {
@@ -316,6 +433,44 @@ async function loadDevlog(sessionToken) {
     `;
   }).join("");
 }
+
+// --- Highlight the nav link for the section in view ---
+(function setupScrollSpy() {
+  if (!("IntersectionObserver" in window)) return;
+  const map = new Map();
+  document.querySelectorAll('.nav-links a[href^="#"]').forEach(a => {
+    const sec = document.getElementById(a.getAttribute("href").slice(1));
+    if (sec) map.set(sec, a);
+  });
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const link = map.get(entry.target);
+      if (link && entry.isIntersecting) {
+        map.forEach(l => l.classList.remove("is-active"));
+        link.classList.add("is-active");
+      }
+    });
+  }, { rootMargin: "-40% 0px -55% 0px" });
+  map.forEach((_, sec) => io.observe(sec));
+})();
+
+// --- Slide sections in as they scroll into view (content stays visible either way) ---
+(function setupReveal() {
+  if (!("IntersectionObserver" in window)) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("in");
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll(".reveal").forEach(el => {
+    el.classList.add("armed");
+    io.observe(el);
+  });
+})();
 
 loadGames();
 loadMemberCount();

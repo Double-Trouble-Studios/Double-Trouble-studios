@@ -3,13 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Double Trouble Studios</title>
-  <meta name="description" content="Double Trouble Studios — an independent game studio. Join the crew for devlogs and early access.">
+  <title>Double Trouble Studios — Independent game studio</title>
+  <meta name="description" content="Double Trouble Studios is an independent game studio from Finland. Join the crew for devlogs and early access to our builds.">
+  <meta name="theme-color" content="#08080a">
+  <link rel="canonical" href="https://double-trouble-studios.github.io/Double-Trouble-studios/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Double Trouble Studios">
+  <meta property="og:title" content="Double Trouble Studios — Games with an edge">
+  <meta property="og:description" content="An independent game studio building in the open. Join the crew for devlogs and early access.">
+  <meta property="og:url" content="https://double-trouble-studios.github.io/Double-Trouble-studios/">
+  <meta property="og:image" content="https://double-trouble-studios.github.io/Double-Trouble-studios/logo.jpg">
+  <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Double Trouble Studios",
+    "url": "https://double-trouble-studios.github.io/Double-Trouble-studios/",
+    "logo": "https://double-trouble-studios.github.io/Double-Trouble-studios/logo.jpg",
+    "email": "noah.doubletroublestudios@gmail.com",
+    "address": { "@type": "PostalAddress", "addressCountry": "FI" }
+  }
+  </script>
   <link rel="icon" href="logo.jpg">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+
+  <a class="skip" href="#main">Skip to content</a>
 
   <nav class="nav">
     <a href="#" class="brand">
@@ -36,20 +58,46 @@
     <p class="eyebrow">Independent game studio</p>
     <h1>Games with an edge. <em>Built for trouble.</em></h1>
     <p class="hero-sub">A small crew shipping hard, fast and in the open. Join up to follow every build and get early access before anyone else.</p>
+
+    <div class="signup signup-inline guest-only" data-signup>
+      <form class="sub-form" novalidate>
+        <input type="email" name="email" placeholder="Your email" autocomplete="email" aria-label="Email address" required>
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button type="submit" class="btn btn-primary"><span class="btn-label">Get early access</span></button>
+      </form>
+      <p class="sub-status" role="status" aria-live="polite"></p>
+      <p class="sub-note">One email, no password. Free. <a href="privacy.html">Privacy</a></p>
+      <div class="sub-success hidden">
+        <h3>Check your inbox</h3>
+        <p>We sent a link to <strong class="sub-email-echo"></strong>. Click it to join or sign in.</p>
+        <p class="sub-hint">Nothing yet? Check spam, or <button type="button" class="link-btn sub-resend" disabled>resend in <span class="count">30</span>s</button> &middot; <button type="button" class="link-btn sub-change">use a different email</button></p>
+      </div>
+    </div>
+
     <div class="hero-actions">
-      <a href="#crew" class="btn btn-primary">Get early access</a>
       <a href="#games" class="btn btn-ghost">See our games</a>
+      <a href="#roadmap" class="btn btn-ghost">Where we're at</a>
     </div>
   </header>
 
-  <main>
-    <section id="games" class="section">
+  <section class="stats" aria-label="Studio at a glance">
+    <div class="stats-inner">
+      <div class="stat"><span class="stat-num" id="stat-games">&ndash;</span><span class="stat-label">Games in the works</span></div>
+      <div class="stat"><span class="stat-num">Phase 2</span><span class="stat-label">Playtest</span></div>
+      <div class="stat"><span class="stat-num">Unity</span><span class="stat-label">Engine</span></div>
+      <div class="stat"><span class="stat-num">Finland</span><span class="stat-label">Home base</span></div>
+      <div class="stat hidden" id="stat-members-wrap"><span class="stat-num" id="stat-members">0</span><span class="stat-label">Troublemakers</span></div>
+    </div>
+  </section>
+
+  <main id="main">
+    <section id="games" class="section reveal">
       <h2><span class="index">01</span> Our games</h2>
       <div id="game-grid" class="grid"></div>
       <p class="scroll-hint hidden"></p>
     </section>
 
-    <section id="about" class="section">
+    <section id="about" class="section reveal">
       <h2><span class="index">02</span> About the studio</h2>
       <p class="about-text">
         Double Trouble Studios is a small independent team building games with Unity.
@@ -58,8 +106,7 @@
       </p>
     </section>
 
-
-    <section id="principles" class="section">
+    <section id="principles" class="section reveal">
       <h2><span class="index">03</span> How we work</h2>
       <div class="cards-3">
         <article class="tile">
@@ -77,7 +124,7 @@
       </div>
     </section>
 
-    <section id="roadmap" class="section">
+    <section id="roadmap" class="section reveal">
       <h2><span class="index">04</span> Roadmap</h2>
       <ol class="roadmap">
         <li class="step done"><span class="step-tag">Phase 1</span><h3>Prototype</h3><p>Core mechanics and feel, built fast and thrown away often.</p></li>
@@ -87,17 +134,39 @@
       </ol>
     </section>
 
-    <section id="devlog" class="section">
-      <h2>Devlog <span class="lock-tag">Members</span><span class="index">05</span></h2>
+    <section id="devlog" class="section reveal">
+      <h2><span class="index">05</span> Devlog <span class="lock-tag">Members</span></h2>
       <div id="devlog-list" class="devlog"></div>
     </section>
 
-    <section id="faq" class="section">
-      <h2><span class="index">06</span> FAQ</h2>
+    <section id="press" class="section reveal">
+      <h2><span class="index">06</span> Press kit</h2>
+      <div class="press">
+        <div class="press-copy">
+          <p>Double Trouble Studios is a small independent game studio from Finland, building games with Unity. The team prototypes in the open and lets its community shape what ships next.</p>
+          <dl class="facts">
+            <div><dt>Studio</dt><dd>Double Trouble Studios</dd></div>
+            <div><dt>Based in</dt><dd>Finland</dd></div>
+            <div><dt>Engine</dt><dd>Unity</dd></div>
+            <div><dt>Status</dt><dd>Independent, in playtest</dd></div>
+            <div><dt>Press contact</dt><dd><a href="mailto:noah.doubletroublestudios@gmail.com">noah.doubletroublestudios@gmail.com</a></dd></div>
+          </dl>
+          <a href="logo.jpg" download="double-trouble-studios-logo.jpg" class="btn btn-ghost">Download logo</a>
+        </div>
+        <div class="press-logo"><img src="logo.jpg" alt="Double Trouble Studios logo"></div>
+      </div>
+    </section>
+
+    <section id="faq" class="section reveal">
+      <h2><span class="index">07</span> FAQ</h2>
       <div class="faq">
         <details>
           <summary>What do I get by joining the crew?</summary>
-          <p>Devlogs, release news and early access invites. Members are the first to hear about new builds.</p>
+          <p>Access to the devlog, release news and early access invites. Members are the first to hear about new builds.</p>
+        </details>
+        <details>
+          <summary>Is it free?</summary>
+          <p>Yes. Joining the crew is free.</p>
         </details>
         <details>
           <summary>Do I need a password?</summary>
@@ -108,45 +177,120 @@
           <p>Only when there's something worth sharing. Every email has an unsubscribe link.</p>
         </details>
         <details>
+          <summary>What do you do with my email?</summary>
+          <p>We use it to send your sign-in link and the updates you signed up for. Nothing else. Details are in the <a href="privacy.html">privacy notice</a>.</p>
+        </details>
+        <details>
+          <summary>How do I leave?</summary>
+          <p>Use the unsubscribe link at the bottom of any email. It takes one click.</p>
+        </details>
+        <details>
           <summary>How do I contact the studio?</summary>
           <p>Use the <a href="contact.html">contact page</a>. We read everything ourselves.</p>
         </details>
       </div>
     </section>
 
-    <section id="crew" class="section subscribe">
-      <h2><span class="index">07</span> Join the crew</h2>
-
+    <section id="crew" class="section subscribe reveal">
+      <h2><span class="index">08</span> Join the crew</h2>
       <p id="member-count" class="member-count hidden"></p>
 
-      <div class="member-panel" id="guest-panel">
-        <p class="lead">One email, no password. We'll send a link — click it once and you're signed in on this device, every time you come back.</p>
-        <form id="sub-form" class="sub-form" novalidate>
-          <input type="email" id="sub-email" placeholder="you@email.com" autocomplete="email" required>
-          <button type="submit" id="sub-btn" class="btn btn-primary">Continue</button>
-        </form>
-        <p id="sub-status" class="sub-status" role="status"></p>
-      </div>
+      <div class="crew-grid">
+        <ul class="perks guest-only">
+          <li><strong>Members-only devlog</strong><span>Read the dispatches the public never sees.</span></li>
+          <li><strong>Early access invites</strong><span>First in line when a build opens up.</span></li>
+          <li><strong>Shape what ships</strong><span>Playtest news and a say in what we build next.</span></li>
+          <li><strong>No spam, no password</strong><span>One link to sign in. Leave with one click.</span></li>
+        </ul>
 
-      <div class="member-panel hidden" id="member-panel">
-        <div class="member-welcome">
-          <div class="member-avatar" id="member-avatar"></div>
-          <div>
-            <h3 id="member-title" style="font-size:1.1rem; letter-spacing:0;">Welcome back</h3>
-            <p style="margin:2px 0 0; color:var(--muted); font-family:var(--font-mono); font-size:0.85rem;" id="member-email"></p>
-            <span class="member-badge">Early access unlocked</span>
+        <div>
+          <div class="member-panel guest-only" id="guest-panel">
+            <p class="lead">Enter your email. We'll send a link. Click it once and you're signed in on this device, every time you come back.</p>
+            <div class="signup" data-signup>
+              <form class="sub-form" id="sub-form" novalidate>
+                <input type="email" name="email" id="sub-email" placeholder="you@email.com" autocomplete="email" aria-label="Email address" required>
+                <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <button type="submit" id="sub-btn" class="btn btn-primary"><span class="btn-label">Continue</span></button>
+              </form>
+              <p id="sub-status" class="sub-status" role="status" aria-live="polite"></p>
+              <p class="sub-note">By continuing you agree to receive emails from us. See the <a href="privacy.html">privacy notice</a>.</p>
+              <div class="sub-success hidden">
+                <h3>Check your inbox</h3>
+                <p>We sent a link to <strong class="sub-email-echo"></strong>. Click it to join or sign in.</p>
+                <p class="sub-hint">Nothing yet? Check spam, or <button type="button" class="link-btn sub-resend" disabled>resend in <span class="count">30</span>s</button> &middot; <button type="button" class="link-btn sub-change">use a different email</button></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="member-panel hidden" id="member-panel">
+            <div class="member-welcome">
+              <div class="member-avatar" id="member-avatar"></div>
+              <div>
+                <h3 id="member-title">Welcome back</h3>
+                <p style="margin:2px 0 0; color:var(--muted); font-size:0.9rem;" id="member-email"></p>
+                <span class="member-badge">Early access unlocked</span>
+              </div>
+            </div>
+            <button class="member-logout" id="member-logout">Log out</button>
           </div>
         </div>
-        <button class="member-logout" id="member-logout">Log out</button>
+      </div>
+    </section>
+
+    <section class="cta-band guest-only">
+      <div class="cta-inner">
+        <div>
+          <h2>Don't miss a drop.</h2>
+          <p>New builds and devlogs go to the crew first.</p>
+        </div>
+        <div class="signup signup-inline" data-signup>
+          <form class="sub-form" novalidate>
+            <input type="email" name="email" placeholder="Your email" autocomplete="email" aria-label="Email address" required>
+            <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <button type="submit" class="btn btn-primary"><span class="btn-label">Join the crew</span></button>
+          </form>
+          <p class="sub-status" role="status" aria-live="polite"></p>
+          <div class="sub-success hidden">
+            <h3>Check your inbox</h3>
+            <p>We sent a link to <strong class="sub-email-echo"></strong>.</p>
+            <p class="sub-hint"><button type="button" class="link-btn sub-resend" disabled>resend in <span class="count">30</span>s</button> &middot; <button type="button" class="link-btn sub-change">use a different email</button></p>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <span>&copy; 2026 Double Trouble Studios</span>
-    <span class="footer-dim">Made in Finland</span>
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="brand">
+          <img src="logo.jpg" alt="">
+          <span>DOUBLE TROUBLE <em>STUDIOS</em></span>
+        </a>
+        <p>An independent game studio from Finland. Built in the open.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <a href="#games">Games</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#devlog">Devlog</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div>
+        <h4>Studio</h4>
+        <a href="contact.html">Contact</a>
+        <a href="#press">Press kit</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="#crew">Join the crew</a>
+      </div>
+    </div>
+    <div class="site-footer-bottom">
+      <span>&copy; 2026 Double Trouble Studios</span>
+      <span>Made in Finland</span>
+    </div>
   </footer>
 
+  <script src="nav.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
