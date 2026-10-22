@@ -5,18 +5,34 @@ const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 const db = supabase.createClient(SUPA_URL, SUPA_KEY);
 const SESSION_KEY = "dts_session"; // { email, session_token }
 
+// tr("English", "Suomi") picks the text for the current language (set up in nav.js)
+const tr = (en, fi) => (window.dtT ? window.dtT(en, fi) : en);
+const locale = () => (tr("en", "fi") === "fi" ? "fi-FI" : "en-GB");
+
+// Page state, kept so everything can re-render when the language or login changes
+const state = {
+  games: null,         // array, or null while loading / on error
+  gamesFailed: false,
+  memberCount: 0,
+  isMember: false,
+  memberEmail: "",
+  memberPosts: null,   // array once loaded
+  devlogFailed: false,
+  teaser: [],
+};
+
+function escapeHtml(str) {
+  return String(str ?? "").replace(/[&<>"']/g, c => (
+    { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
+  ));
+}
+
 const CONTROLLER_ICON = `
-  <svg viewBox="0 0 64 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="1" y="8" width="62" height="24" rx="12" fill="url(#dt-grad)"/>
+  <svg viewBox="0 0 64 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="1" y="8" width="62" height="24" rx="12" fill="#e4002b"/>
     <circle cx="18" cy="20" r="5" fill="#0b0818" opacity="0.55"/>
     <circle cx="46" cy="16" r="3" fill="#0b0818" opacity="0.55"/>
     <circle cx="52" cy="22" r="3" fill="#0b0818" opacity="0.55"/>
-    <defs>
-      <linearGradient id="dt-grad" x1="0" y1="0" x2="64" y2="40">
-        <stop offset="0%" stop-color="#e5001c"/>
-        <stop offset="100%" stop-color="#8f0012"/>
-      </linearGradient>
-    </defs>
   </svg>
 `;
 
@@ -28,61 +44,105 @@ function updateScrollHint() {
   hint.classList.toggle("hidden", grid.scrollWidth <= grid.clientWidth + 1);
 }
 
-async function loadGames() {
+function gameLinkLabel(url) {
+  try {
+    if (new URL(url).hostname.endsWith("itch.io")) return tr("Play on itch.io", "Pelaa itch.iossa");
+  } catch { /* fall through */ }
+  return tr("Play now", "Pelaa nyt");
+}
+
+function renderGames() {
   const grid = document.getElementById("game-grid");
   if (!grid) return;
 
-  const { data, error } = await db.from("games").select("*").order("id");
+  const stat = document.getElementById("stat-games");
+  if (stat) stat.textContent = state.games ? String(state.games.length) : "–";
 
-  const gamesStat = document.getElementById("stat-games");
-  if (gamesStat) gamesStat.textContent = !error && data ? String(data.length) : "\u2013";
-
-  if (error || !data || data.length === 0) {
-    grid.innerHTML = `
-      <div class="grid-empty">
-        ${CONTROLLER_ICON}
-        <span>New games in development — join the crew below to hear about them first.</span>
-      </div>
-    `;
-    updateScrollHint();
+  if (state.games === null) {
+    if (state.gamesFailed) {
+      grid.innerHTML = `
+        <div class="grid-empty">
+          ${CONTROLLER_ICON}
+          <span>${tr("New games in development. Join the crew below to hear about them first.",
+                     "Uusia pelejä työn alla. Liity jengiin alla, niin kuulet niistä ensimmäisenä.")}</span>
+        </div>`;
+    }
     return;
   }
 
-  grid.innerHTML = data.map(g => `
-    <article class="card">
-      ${g.image_url
-        ? `<img src="${g.image_url}" alt="${g.title}">`
-        : `<div class="card-placeholder">${CONTROLLER_ICON}</div>`}
-      <div class="card-body">
-        <h3>${g.title}</h3>
-        <p>${g.description || ""}</p>
-      </div>
-    </article>
-  `).join("");
+  const cards = state.games.map(g => {
+    const title = escapeHtml(g.title);
+    const img = g.image_url
+      ? `<img src="${escapeHtml(g.image_url)}" alt="${title}" width="520" height="190" loading="lazy">`
+      : `<div class="card-placeholder">${CONTROLLER_ICON}</div>`;
+    const link = g.url && /^https?:\/\//i.test(g.url)
+      ? `<a class="btn btn-ghost card-link" href="${escapeHtml(g.url)}" target="_blank" rel="noopener">${gameLinkLabel(g.url)}</a>`
+      : "";
+    return `
+      <article class="card">
+        ${img}
+        <div class="card-body">
+          <h3>${title}</h3>
+          <p>${escapeHtml(g.description || "")}</p>
+          ${link}
+        </div>
+      </article>`;
+  });
 
+  // A teaser tile so the grid never looks finished
+  cards.push(`
+    <article class="card card-next">
+      <div class="card-placeholder next-mark">?</div>
+      <div class="card-body">
+        <h3>${tr("Next project", "Seuraava projekti")}</h3>
+        <p>${tr("Classified. Join the crew to be first to know.", "Salainen. Liity jengiin, niin kuulet ensimmäisenä.")}</p>
+        ${state.isMember ? "" : `<a class="btn btn-ghost card-link" href="#crew">${tr("Join the crew", "Liity jengiin")}</a>`}
+      </div>
+    </article>`);
+
+  grid.innerHTML = cards.join("");
   updateScrollHint();
+}
+
+async function loadGames() {
+  const { data, error } = await db.from("games").select("*").order("id");
+  if (error || !data) {
+    state.games = null;
+    state.gamesFailed = true;
+  } else {
+    state.games = data;
+    state.gamesFailed = false;
+  }
+  renderGames();
 }
 
 window.addEventListener("resize", updateScrollHint);
 
 // --- Member count (social proof) ---
-async function loadMemberCount() {
+function renderMemberCount() {
   const el = document.getElementById("member-count");
-  if (!el) return;
+  const n = state.memberCount;
+  if (!el || n < 1) return;
 
-  const { data, error } = await db.rpc("get_member_count");
-  if (error || !data || typeof data.count !== "number" || data.count < 1) return;
-
-  const noun = data.count === 1 ? "troublemaker" : "troublemakers";
-  el.textContent = `${data.count.toLocaleString("en-US")} ${noun} already causing chaos with us`;
+  el.textContent = tr(
+    `${n.toLocaleString("en-US")} ${n === 1 ? "troublemaker" : "troublemakers"} already causing chaos with us`,
+    `${n.toLocaleString("fi-FI")} ${n === 1 ? "riiviö" : "riiviötä"} on jo mukana aiheuttamassa kaaosta`
+  );
   el.classList.remove("hidden");
 
   const statWrap = document.getElementById("stat-members-wrap");
   const statNum = document.getElementById("stat-members");
   if (statWrap && statNum) {
-    statNum.textContent = data.count.toLocaleString("en-US");
+    statNum.textContent = n.toLocaleString(locale());
     statWrap.classList.remove("hidden");
   }
+}
+
+async function loadMemberCount() {
+  const { data, error } = await db.rpc("get_member_count");
+  if (error || !data || typeof data.count !== "number") return;
+  state.memberCount = data.count;
+  renderMemberCount();
 }
 
 // --- Session helpers ---
@@ -95,12 +155,6 @@ function readSession() {
   }
 }
 
-function writeSession(session) {
-  try {
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-  } catch { /* private mode etc — ignore, membership still works this visit */ }
-}
-
 function clearSession() {
   try { localStorage.removeItem(SESSION_KEY); } catch {}
 }
@@ -109,11 +163,30 @@ function setGuestOnly(visible) {
   document.querySelectorAll(".guest-only").forEach(el => el.classList.toggle("hidden", !visible));
 }
 
+function memberGreeting(email) {
+  const hour = new Date().getHours();
+  const raw = (email || "").split("@")[0].split("+")[0].replace(/[._-]+/g, " ").trim();
+  const name = raw ? raw.charAt(0).toUpperCase() + raw.slice(1) : "";
+  const base = hour < 11
+    ? tr("Good morning", "Hyvää huomenta")
+    : hour < 18
+      ? tr("Good afternoon", "Hyvää päivää")
+      : tr("Good evening", "Hyvää iltaa");
+  return name ? `${base}, ${name}` : base;
+}
+
+function renderMemberPanel() {
+  const title = document.getElementById("member-title");
+  if (title && state.isMember) title.textContent = memberGreeting(state.memberEmail);
+}
+
 function showMember(email) {
   const nav = document.getElementById("nav-member");
   const navCta = document.getElementById("nav-cta");
   const memberPanel = document.getElementById("member-panel");
 
+  state.isMember = true;
+  state.memberEmail = email;
   setGuestOnly(false);
   if (nav) {
     nav.classList.remove("hidden");
@@ -125,18 +198,26 @@ function showMember(email) {
     document.getElementById("member-email").textContent = email;
     document.getElementById("member-avatar").textContent = email.charAt(0).toUpperCase();
   }
+  renderMemberPanel();
+  renderGames();
+  renderDevlog();
 }
 
 function showGuest() {
-  showDevlogLocked();
   const nav = document.getElementById("nav-member");
   const navCta = document.getElementById("nav-cta");
   const memberPanel = document.getElementById("member-panel");
 
+  state.isMember = false;
+  state.memberEmail = "";
+  state.memberPosts = null;
   setGuestOnly(true);
   if (nav) nav.classList.add("hidden");
   if (navCta) navCta.classList.remove("hidden");
   if (memberPanel) memberPanel.classList.add("hidden");
+  renderGames();
+  renderDevlog();
+  loadDevlogTeaser();
 }
 
 async function checkSession() {
@@ -185,9 +266,7 @@ function setupSignup(root) {
   const success = root.querySelector(".sub-success");
   const echo = root.querySelector(".sub-email-echo");
   const resend = root.querySelector(".sub-resend");
-  const count = root.querySelector(".count");
   const change = root.querySelector(".sub-change");
-  const idleLabel = label.textContent;
   let currentEmail = "";
   let timer = null;
 
@@ -196,19 +275,22 @@ function setupSignup(root) {
     status.textContent = text;
   }
 
+  const resendIn = (left) =>
+    tr(`resend in <span class="count">${left}</span>s`, `lähetä uudelleen <span class="count">${left}</span> s`);
+
   function startCooldown() {
     clearInterval(timer);
     let left = COOLDOWN_SECONDS;
     resend.disabled = true;
-    resend.innerHTML = 'resend in <span class="count">' + left + "</span>s";
+    resend.innerHTML = resendIn(left);
     timer = setInterval(() => {
       left -= 1;
       if (left <= 0) {
         clearInterval(timer);
         resend.disabled = false;
-        resend.textContent = "resend the link";
+        resend.textContent = tr("resend the link", "lähetä linkki uudelleen");
       } else {
-        resend.innerHTML = 'resend in <span class="count">' + left + "</span>s";
+        resend.innerHTML = resendIn(left);
       }
     }, 1000);
   }
@@ -258,7 +340,8 @@ function setupSignup(root) {
     const email = input.value.trim().toLowerCase();
 
     if (!EMAIL_RE.test(email)) {
-      say("Enter a valid email address, like you@email.com.", "err");
+      say(tr("Enter a valid email address, like you@email.com.",
+             "Syötä kelvollinen sähköpostiosoite, esimerkiksi sinä@posti.fi."), "err");
       input.setAttribute("aria-invalid", "true");
       input.focus();
       return;
@@ -270,23 +353,26 @@ function setupSignup(root) {
       return;
     }
 
+    const idleHtml = label.innerHTML;
     btn.disabled = true;
     btn.classList.add("loading");
-    label.textContent = "Sending";
+    label.textContent = tr("Sending", "Lähetetään");
     say("");
 
     const { error } = await request(email);
 
     btn.disabled = false;
     btn.classList.remove("loading");
-    label.textContent = idleLabel;
+    label.innerHTML = idleHtml;
 
     if (error && error.message === "cooldown") {
-      say("You just asked for a link. Check your inbox, or try again in " + error.seconds + "s.", "err");
+      say(tr(`You just asked for a link. Check your inbox, or try again in ${error.seconds}s.`,
+             `Pyysit juuri linkkiä. Tarkista postilaatikkosi tai yritä uudelleen ${error.seconds} s kuluttua.`), "err");
       return;
     }
     if (error) {
-      say("Something went wrong. Please try again in a moment.", "err");
+      say(tr("Something went wrong. Please try again in a moment.",
+             "Jokin meni pieleen. Yritä hetken kuluttua uudelleen."), "err");
       console.error(error);
       return;
     }
@@ -298,11 +384,11 @@ function setupSignup(root) {
   resend.addEventListener("click", async () => {
     if (resend.disabled || !currentEmail) return;
     resend.disabled = true;
-    resend.textContent = "sending...";
+    resend.textContent = tr("sending...", "lähetetään...");
     const { error } = await request(currentEmail);
     if (error && error.message !== "cooldown") {
       resend.disabled = false;
-      resend.textContent = "failed, try again";
+      resend.textContent = tr("failed, try again", "epäonnistui, yritä uudelleen");
       return;
     }
     startCooldown();
@@ -367,17 +453,33 @@ function launchConfetti() {
   requestAnimationFrame(tick);
 }
 
-// --- Easter egg: type "trouble" anywhere on the page ---
-(function setupTroubleEgg() {
+// --- Easter eggs: type "trouble", or enter the Konami code ---
+(function setupEasterEggs() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  const target = "trouble";
+  const word = "trouble";
+  const konami = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
   let buffer = "";
+  let pos = 0;
 
   window.addEventListener("keydown", (e) => {
+    const tag = (e.target && e.target.tagName) || "";
+    if (tag === "INPUT" || tag === "TEXTAREA") return;
+
+    // Konami code
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    pos = key === konami[pos] ? pos + 1 : (key === konami[0] ? 1 : 0);
+    if (pos === konami.length) {
+      pos = 0;
+      document.body.classList.add("retro-mode");
+      if (window.dtToast) window.dtToast(tr("Retro mode unlocked", "Retro-tila avattu"));
+      setTimeout(() => document.body.classList.remove("retro-mode"), 7000);
+    }
+
+    // "trouble"
     if (e.key.length !== 1) return;
-    buffer = (buffer + e.key.toLowerCase()).slice(-target.length);
-    if (buffer === target) {
+    buffer = (buffer + e.key.toLowerCase()).slice(-word.length);
+    if (buffer === word) {
       buffer = "";
       document.body.classList.add("chaos-mode");
       launchConfetti();
@@ -387,51 +489,86 @@ function launchConfetti() {
 })();
 
 // --- Devlog ---
-function escapeHtml(str) {
-  return String(str ?? "").replace(/[&<>"']/g, c => (
-    { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
-  ));
+function postDate(iso) {
+  return new Date(iso).toLocaleDateString(locale(), { day: "numeric", month: "short", year: "numeric" });
 }
 
-function showDevlogLocked() {
+function renderTeaser() {
+  const el = document.getElementById("devlog-teaser");
+  if (!el) return;
+  if (state.isMember || !state.teaser.length) {
+    el.classList.add("hidden");
+    el.innerHTML = "";
+    return;
+  }
+  el.innerHTML = `
+    <p class="teaser-label">${tr("Latest dispatches", "Tuoreimmat tiedotteet")}</p>
+    ${state.teaser.map(p => `
+      <div class="teaser-item">
+        <time datetime="${escapeHtml(p.published_at)}">${postDate(p.published_at)}</time>
+        <strong>${escapeHtml(p.title)}</strong>
+        <span class="teaser-lock">${tr("Members only", "Vain jäsenille")}</span>
+      </div>`).join("")}`;
+  el.classList.remove("hidden");
+}
+
+function renderDevlog() {
   const list = document.getElementById("devlog-list");
   if (!list) return;
-  list.innerHTML = `
-    <div class="grid-empty">
-      Members only — join the crew below to read the devlog.
-      <a href="#crew" class="btn btn-primary">Join the crew</a>
-    </div>
-  `;
+
+  if (!state.isMember) {
+    list.innerHTML = `
+      <div class="grid-empty">
+        ${tr("Members only. Join the crew below to read the devlog.",
+             "Vain jäsenille. Liity jengiin alla lukeaksesi kehityspäiväkirjaa.")}
+        <a href="#crew" class="btn btn-primary">${tr("Join the crew", "Liity jengiin")}</a>
+      </div>`;
+    renderTeaser();
+    return;
+  }
+
+  renderTeaser();
+  if (state.devlogFailed) {
+    list.innerHTML = `<div class="grid-empty">${tr("The devlog is unavailable right now. Try again later.",
+      "Kehityspäiväkirja ei ole juuri nyt saatavilla. Yritä myöhemmin uudelleen.")}</div>`;
+    return;
+  }
+  if (state.memberPosts === null) return; // still loading
+  if (state.memberPosts.length === 0) {
+    list.innerHTML = `<div class="grid-empty">${tr("First devlog coming soon.", "Ensimmäinen kehityspäiväkirja tulossa pian.")}</div>`;
+    return;
+  }
+
+  list.innerHTML = state.memberPosts.map(p => `
+    <article class="post">
+      <time class="post-date" datetime="${escapeHtml(p.published_at)}">${postDate(p.published_at)}</time>
+      <div>
+        <h3>${escapeHtml(p.title)}</h3>
+        <p>${escapeHtml(p.body)}</p>
+      </div>
+    </article>`).join("");
 }
 
 async function loadDevlog(sessionToken) {
-  const list = document.getElementById("devlog-list");
-  if (!list) return;
-
   const { data, error } = await db.rpc("get_devlog", { session_token_input: sessionToken });
-
   if (error || !data || !data.ok) {
-    list.innerHTML = `<div class="grid-empty">The devlog is unavailable right now. Try again later.</div>`;
-    return;
+    state.devlogFailed = true;
+  } else {
+    state.devlogFailed = false;
+    state.memberPosts = data.posts || [];
   }
+  renderDevlog();
+}
 
-  if (!data.posts || data.posts.length === 0) {
-    list.innerHTML = `<div class="grid-empty">First devlog coming soon.</div>`;
-    return;
-  }
-
-  list.innerHTML = data.posts.map(p => {
-    const date = new Date(p.published_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-    return `
-      <article class="post">
-        <time class="post-date" datetime="${escapeHtml(p.published_at)}">${date}</time>
-        <div>
-          <h3>${escapeHtml(p.title)}</h3>
-          <p>${escapeHtml(p.body)}</p>
-        </div>
-      </article>
-    `;
-  }).join("");
+// Titles and dates of the latest posts, shown to guests. Needs supabase_devlog_teaser.sql;
+// without it the call just fails and the teaser stays hidden.
+async function loadDevlogTeaser() {
+  if (state.teaser.length) { renderTeaser(); return; }
+  try {
+    const { data, error } = await db.rpc("get_devlog_teaser");
+    if (!error && Array.isArray(data)) state.teaser = data;
+  } catch { /* optional feature */ }
+  renderTeaser();
 }
 
 // --- Highlight the nav link for the section in view ---
@@ -446,8 +583,9 @@ async function loadDevlog(sessionToken) {
     entries.forEach(entry => {
       const link = map.get(entry.target);
       if (link && entry.isIntersecting) {
-        map.forEach(l => l.classList.remove("is-active"));
+        map.forEach(l => { l.classList.remove("is-active"); l.removeAttribute("aria-current"); });
         link.classList.add("is-active");
+        link.setAttribute("aria-current", "true");
       }
     });
   }, { rootMargin: "-40% 0px -55% 0px" });
@@ -471,6 +609,28 @@ async function loadDevlog(sessionToken) {
     io.observe(el);
   });
 })();
+
+// --- Hide the mobile "join" bar while a signup form is already on screen ---
+(function setupMobileCta() {
+  if (!("IntersectionObserver" in window)) return;
+  const targets = document.querySelectorAll(".signup, #crew");
+  const visible = new Set();
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) visible.add(entry.target); else visible.delete(entry.target);
+    });
+    document.body.classList.toggle("signup-in-view", visible.size > 0);
+  });
+  targets.forEach(t => io.observe(t));
+})();
+
+// --- Re-render dynamic content when the language changes ---
+document.addEventListener("dt:lang", () => {
+  renderGames();
+  renderMemberCount();
+  renderMemberPanel();
+  renderDevlog();
+});
 
 loadGames();
 loadMemberCount();
