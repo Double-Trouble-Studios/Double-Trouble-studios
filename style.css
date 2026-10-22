@@ -715,3 +715,105 @@ body.chaos-mode { filter: saturate(1.5) contrast(1.1); }
   .signup .sub-form button { width: 100%; justify-content: center; }
   .hero-actions .btn { flex: 1 1 100%; justify-content: center; }
 }
+
+/* =====================================================================
+   More: language switch, toast, mobile join bar, devlog teaser,
+   game links, contact form, retro mode
+   ===================================================================== */
+.lang-toggle {
+  margin-left: 10px;
+  padding: 8px 12px;
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.lang-toggle:hover { border-color: var(--red); color: var(--red); }
+@media (max-width: 1180px) {
+  html.js .lang-toggle { margin: 12px 0 0; align-self: flex-start; }
+}
+
+.toast {
+  position: fixed; left: 50%; bottom: 28px; z-index: 90;
+  transform: translate(-50%, 20px);
+  padding: 12px 22px;
+  background: var(--ink); color: var(--bg);
+  font-family: var(--font-display); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.95rem;
+  opacity: 0; pointer-events: none;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* Sticky join bar, phones only, hidden while a form is on screen */
+.mobile-cta { display: none; }
+@media (max-width: 760px) {
+  .mobile-cta {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 45;
+    display: block; padding: 16px;
+    text-align: center; text-decoration: none;
+    background: var(--red); color: #fff;
+    font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; letter-spacing: 0.14em; text-transform: uppercase;
+    transform: translateY(110%);
+    transition: transform 0.25s ease;
+  }
+  body.past-hero:not(.signup-in-view) .mobile-cta { transform: none; }
+  .mobile-cta.hidden { display: none !important; }
+  .to-top { bottom: 84px; }
+  body { padding-bottom: 0; }
+}
+
+/* Devlog teaser for guests */
+.teaser { max-width: 880px; margin-bottom: 18px; }
+.teaser-label { margin: 0 0 10px; font-family: var(--font-display); font-weight: 700; font-size: 0.9rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); }
+.teaser-item { display: grid; grid-template-columns: 130px 1fr auto; gap: 18px; align-items: baseline; padding: 14px 0; border-top: 1px solid var(--line); }
+.teaser-item:last-child { border-bottom: 1px solid var(--line); }
+.teaser-item time { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.teaser-item strong { font-family: var(--font-display); font-weight: 800; font-size: 1.35rem; text-transform: uppercase; }
+.teaser-lock { font-family: var(--font-display); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red); border: 1px solid var(--red); padding: 2px 10px; white-space: nowrap; }
+@media (max-width: 760px) {
+  .teaser-item { grid-template-columns: 1fr auto; gap: 4px 12px; }
+  .teaser-item time { grid-column: 1 / -1; }
+}
+
+/* Game cards */
+.card-link { margin-top: 16px; padding: 10px 22px; font-size: 0.95rem; }
+.card-next { border-style: dashed; background: transparent; }
+.card-next .next-mark {
+  font-family: var(--font-display); font-weight: 800; font-size: 5rem; color: var(--red);
+  background: repeating-linear-gradient(135deg, rgba(228,0,43,0.08) 0 10px, transparent 10px 20px);
+}
+.card-next:hover { border-color: var(--red); }
+
+.share-btn { margin-top: 18px; padding: 10px 22px; font-size: 0.95rem; }
+
+/* Contact form */
+.contact-form { display: grid; gap: 16px; margin-top: 8px; }
+.contact-form label { display: grid; gap: 6px; font-family: var(--font-display); font-weight: 700; font-size: 0.9rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.contact-form input, .contact-form textarea {
+  width: 100%; padding: 14px 16px;
+  background: var(--bg); color: var(--ink);
+  border: 1px solid var(--line-strong); border-radius: 0;
+  font-family: var(--font-body); font-size: 1rem; text-transform: none; letter-spacing: 0; font-weight: 400;
+  outline: none;
+}
+.contact-form textarea { min-height: 150px; resize: vertical; }
+.contact-form input:focus, .contact-form textarea:focus { border-color: var(--red); box-shadow: 0 0 0 1px var(--red); }
+.contact-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.contact-hint { margin: 0; font-size: 0.9rem; color: var(--muted); }
+
+/* Easter egg: Konami code */
+body.retro-mode { filter: hue-rotate(115deg) saturate(1.6) contrast(1.1); }
+body.retro-mode * { font-family: "Courier New", monospace !important; letter-spacing: 0.02em; }
+@media (prefers-reduced-motion: reduce) {
+  body.retro-mode { filter: none; }
+}
+
+/* Finnish headlines run longer than English ones */
+html[lang="fi"] .hero h1 { font-size: clamp(2.6rem, 7.2vw, 6rem); max-width: 14ch; }
+html[lang="fi"] .cta-inner h2 { font-size: clamp(2rem, 4.4vw, 3.4rem); }

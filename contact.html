@@ -1,15 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-fi-title="Yhteys — Double Trouble Studios">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact — Double Trouble Studios</title>
   <meta name="description" content="Get in touch with Double Trouble Studios.">
   <meta name="theme-color" content="#08080a">
+  <link rel="canonical" href="https://double-trouble-studios.github.io/Double-Trouble-studios/contact.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="icon" href="logo.jpg">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <a class="skip" href="#main" data-fi="Siirry sisältöön">Skip to content</a>
 
   <nav class="nav">
     <a href="index.html" class="brand">
@@ -28,29 +33,77 @@
   </nav>
 
   <header class="hero" style="padding-bottom: 6vh;">
-    <p class="eyebrow">Open channel</p>
-    <h1>Get in <em>touch.</em></h1>
-    <p class="hero-sub">Press, feedback, bug reports, collab ideas. One inbox, read by the people who made the game.</p>
+    <p class="eyebrow" data-fi="Avoin kanava">Open channel</p>
+    <h1 data-fi="Ota <em>yhteyttä.</em>">Get in <em>touch.</em></h1>
+    <p class="hero-sub" data-fi="Lehdistö, palaute, bugiraportit, yhteistyöideat. Yksi postilaatikko, jota lukevat pelin tekijät.">Press, feedback, bug reports, collab ideas. One inbox, read by the people who made the game.</p>
   </header>
 
   <main id="main">
     <section class="section" style="padding-top: 6vh;">
       <div class="member-panel">
-        <p class="lead" style="font-family: var(--font-display); font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;">Email us directly</p>
-        <p style="margin: 16px 0 22px;">
+        <p class="lead" style="font-family: var(--font-display); font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;" data-fi="Kirjoita meille">Write to us</p>
+
+        <form class="contact-form" id="contact-form" novalidate>
+          <label><span data-fi="Nimesi">Your name</span>
+            <input type="text" id="cf-name" autocomplete="name" maxlength="80">
+          </label>
+          <label><span data-fi="Aihe">Subject</span>
+            <input type="text" id="cf-subject" maxlength="120" value="Hello Double Trouble">
+          </label>
+          <label><span data-fi="Viesti">Message</span>
+            <textarea id="cf-message" maxlength="3000"></textarea>
+          </label>
+          <div class="contact-actions">
+            <button type="submit" class="btn btn-primary"><span class="btn-label" data-fi="Avaa sähköpostissa">Open in email app</span></button>
+            <button type="button" class="btn btn-ghost" data-copy="noah.doubletroublestudios@gmail.com" data-fi="Kopioi osoite">Copy address</button>
+          </div>
+          <p class="contact-hint" data-fi="Painike avaa sähköpostiohjelmasi valmiiksi täytetyllä viestillä. Mitään ei lähetetä tältä sivulta.">The button opens your email app with the message filled in. Nothing is sent from this page.</p>
+        </form>
+
+        <p style="margin: 28px 0 0;">
           <a class="mail-link" href="mailto:noah.doubletroublestudios@gmail.com">noah.doubletroublestudios@gmail.com</a>
         </p>
-        <p class="lead" style="margin-bottom: 24px;">We read everything ourselves. No support tickets, no bots. Expect a reply in a few days.</p>
-        <a href="mailto:noah.doubletroublestudios@gmail.com" class="btn btn-primary">Open in email app</a>
+        <p class="lead" style="margin: 14px 0 0;" data-fi="Luemme kaiken itse. Ei tukitikettejä, ei botteja. Odota vastausta muutamassa päivässä.">We read everything ourselves. No support tickets, no bots. Expect a reply in a few days.</p>
       </div>
     </section>
   </main>
 
   <footer class="footer">
     <span>&copy; 2026 Double Trouble Studios</span>
-    <span class="footer-dim"><a href="privacy.html">Privacy</a> &middot; Made in Finland</span>
+    <span class="footer-dim"><a href="privacy.html" data-fi="Tietosuoja">Privacy</a> &middot; <span data-fi="Tehty Suomessa">Made in Finland</span></span>
   </footer>
 
   <script src="nav.js"></script>
+  <script>
+    // Builds a mailto: link from the form. No backend, nothing leaves the browser until the user sends it.
+    (function () {
+      var form = document.getElementById("contact-form");
+      var subject = document.getElementById("cf-subject");
+      var to = "noah.doubletroublestudios@gmail.com";
+      var defaultSubject = "Hello Double Trouble";
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var name = document.getElementById("cf-name").value.trim();
+        var message = document.getElementById("cf-message").value.trim();
+        var subj = subject.value.trim() || defaultSubject;
+        var body = message + (name ? "\n\n" + name : "");
+        if (!message) {
+          window.dtToast(window.dtT("Write a message first", "Kirjoita ensin viesti"));
+          document.getElementById("cf-message").focus();
+          return;
+        }
+        location.href = "mailto:" + to + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(body);
+      });
+
+      // Keep the prefilled subject in step with the language until the user edits it
+      var edited = false;
+      subject.addEventListener("input", function () { edited = true; });
+      document.addEventListener("dt:lang", function () {
+        if (!edited) subject.value = window.dtT("Hello Double Trouble", "Moi Double Trouble");
+      });
+      if (window.dtLang === "fi") subject.value = "Moi Double Trouble";
+    })();
+  </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-fi-title="Double Trouble Studios — Itsenäinen pelistudio">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,13 +25,16 @@
     "address": { "@type": "PostalAddress", "addressCountry": "FI" }
   }
   </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://xemwnccaqxnttrabdayh.supabase.co" crossorigin>
   <link rel="icon" href="logo.jpg">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-  <a class="skip" href="#main">Skip to content</a>
+  <a class="skip" href="#main" data-fi="Siirry sisältöön">Skip to content</a>
 
   <nav class="nav">
     <a href="#" class="brand">
@@ -55,51 +58,52 @@
   </nav>
 
   <header class="hero">
-    <p class="eyebrow">Independent game studio</p>
-    <h1>Games with an edge. <em>Built for trouble.</em></h1>
-    <p class="hero-sub">A small crew shipping hard, fast and in the open. Join up to follow every build and get early access before anyone else.</p>
+    <p class="eyebrow" data-fi="Itsenäinen pelistudio">Independent game studio</p>
+    <h1 data-fi="Pelejä särmällä. <em>Tehty aiheuttamaan harmia.</em>">Games with an edge. <em>Built for trouble.</em></h1>
+    <p class="hero-sub" data-fi="Pieni jengi, joka tekee kovaa ja nopeasti ja avoimesti. Liity seuraamaan jokaista versiota ja pääset kokeilemaan ensimmäisenä.">A small crew shipping hard, fast and in the open. Join up to follow every build and get early access before anyone else.</p>
 
     <div class="signup signup-inline guest-only" data-signup>
       <form class="sub-form" novalidate>
-        <input type="email" name="email" placeholder="Your email" autocomplete="email" aria-label="Email address" required>
+        <input type="email" name="email" placeholder="Your email" data-fi-placeholder="Sähköpostisi" autocomplete="email" aria-label="Email address" data-fi-aria="Sähköpostiosoite" required>
         <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <button type="submit" class="btn btn-primary"><span class="btn-label">Get early access</span></button>
+        <button type="submit" class="btn btn-primary"><span class="btn-label" data-fi="Hae ennakkopääsy">Get early access</span></button>
       </form>
       <p class="sub-status" role="status" aria-live="polite"></p>
-      <p class="sub-note">One email, no password. Free. <a href="privacy.html">Privacy</a></p>
+      <p class="sub-note" data-fi="Yksi sähköposti, ei salasanaa. Ilmainen. <a href='privacy.html'>Tietosuoja</a>">One email, no password. Free. <a href="privacy.html">Privacy</a></p>
       <div class="sub-success hidden">
-        <h3>Check your inbox</h3>
-        <p>We sent a link to <strong class="sub-email-echo"></strong>. Click it to join or sign in.</p>
-        <p class="sub-hint">Nothing yet? Check spam, or <button type="button" class="link-btn sub-resend" disabled>resend in <span class="count">30</span>s</button> &middot; <button type="button" class="link-btn sub-change">use a different email</button></p>
+        <h3 data-fi="Tarkista postilaatikkosi">Check your inbox</h3>
+        <p><span data-fi="Lähetimme linkin osoitteeseen">We sent a link to</span> <strong class="sub-email-echo"></strong>. <span data-fi="Klikkaa sitä liittyäksesi tai kirjautuaksesi.">Click it to join or sign in.</span></p>
+        <p class="sub-hint"><span data-fi="Ei mitään? Tarkista roskaposti tai">Nothing yet? Check spam, or</span> <button type="button" class="link-btn sub-resend" disabled>resend in <span class="count">30</span>s</button> &middot; <button type="button" class="link-btn sub-change" data-fi="käytä toista sähköpostia">use a different email</button></p>
       </div>
     </div>
 
     <div class="hero-actions">
-      <a href="#games" class="btn btn-ghost">See our games</a>
-      <a href="#roadmap" class="btn btn-ghost">Where we're at</a>
+      <a href="#games" class="btn btn-ghost" data-fi="Katso pelimme">See our games</a>
+      <a href="#roadmap" class="btn btn-ghost" data-fi="Missä mennään">Where we're at</a>
     </div>
   </header>
 
-  <section class="stats" aria-label="Studio at a glance">
+  <section class="stats" aria-label="Studio at a glance" data-fi-aria="Studio lyhyesti">
     <div class="stats-inner">
-      <div class="stat"><span class="stat-num" id="stat-games">&ndash;</span><span class="stat-label">Games in the works</span></div>
-      <div class="stat"><span class="stat-num">Phase 2</span><span class="stat-label">Playtest</span></div>
-      <div class="stat"><span class="stat-num">Unity</span><span class="stat-label">Engine</span></div>
-      <div class="stat"><span class="stat-num">Finland</span><span class="stat-label">Home base</span></div>
-      <div class="stat hidden" id="stat-members-wrap"><span class="stat-num" id="stat-members">0</span><span class="stat-label">Troublemakers</span></div>
+      <div class="stat"><span class="stat-num" id="stat-games">&ndash;</span><span class="stat-label" data-fi="Peliä työn alla">Games in the works</span></div>
+      <div class="stat"><span class="stat-num" data-fi="Vaihe 2">Phase 2</span><span class="stat-label" data-fi="Pelitestaus">Playtest</span></div>
+      <div class="stat"><span class="stat-num">Unity</span><span class="stat-label" data-fi="Pelimoottori">Engine</span></div>
+      <div class="stat"><span class="stat-num" data-fi="Suomi">Finland</span><span class="stat-label" data-fi="Kotipesä">Home base</span></div>
+      <div class="stat hidden" id="stat-members-wrap"><span class="stat-num" id="stat-members">0</span><span class="stat-label" data-fi="Jengiläistä">Troublemakers</span></div>
     </div>
   </section>
 
   <main id="main">
     <section id="games" class="section reveal">
-      <h2><span class="index">01</span> Our games</h2>
+      <h2><span class="index">01</span> <span data-fi="Pelimme">Our games</span></h2>
       <div id="game-grid" class="grid"></div>
+      <noscript><p class="grid-empty">Please enable JavaScript to see our games and sign in. / Ota JavaScript käyttöön nähdäksesi pelit ja kirjautuaksesi.</p></noscript>
       <p class="scroll-hint hidden"></p>
     </section>
 
     <section id="about" class="section reveal">
-      <h2><span class="index">02</span> About the studio</h2>
-      <p class="about-text">
+      <h2><span class="index">02</span> <span data-fi="Tietoa studiosta">About the studio</span></h2>
+      <p class="about-text" data-fi="Double Trouble Studios on pieni itsenäinen tiimi, joka tekee pelejä Unityllä. Prototypoimme nopeasti, jaamme edistymisemme <strong>avoimesti</strong> ja annamme yhteisön vaikuttaa siihen, mitä teemme seuraavaksi.">
         Double Trouble Studios is a small independent team building games with Unity.
         We prototype fast, share our progress <strong>openly</strong>, and let our
         community shape what we make next.
@@ -107,117 +111,118 @@
     </section>
 
     <section id="principles" class="section reveal">
-      <h2><span class="index">03</span> How we work</h2>
+      <h2><span class="index">03</span> <span data-fi="Näin teemme töitä">How we work</span></h2>
       <div class="cards-3">
         <article class="tile">
-          <h3>Build in the open</h3>
-          <p>Rough prototypes get shared early. You see what works, what breaks, and why we cut things.</p>
+          <h3 data-fi="Tee avoimesti">Build in the open</h3>
+          <p data-fi="Karkeat prototyypit jaetaan ajoissa. Näet mikä toimii, mikä hajoaa ja miksi jotain karsitaan.">Rough prototypes get shared early. You see what works, what breaks, and why we cut things.</p>
         </article>
         <article class="tile">
-          <h3>Playtest first</h3>
-          <p>Feedback from real players beats guessing. Early access members shape what ships next.</p>
+          <h3 data-fi="Testaa ensin">Playtest first</h3>
+          <p data-fi="Oikeiden pelaajien palaute voittaa arvailun. Ennakkopääsyn jäsenet vaikuttavat siihen, mitä julkaistaan.">Feedback from real players beats guessing. Early access members shape what ships next.</p>
         </article>
         <article class="tile">
-          <h3>Small and sharp</h3>
-          <p>A tiny crew means fast decisions, no committees, and every feature earns its place.</p>
+          <h3 data-fi="Pieni ja terävä">Small and sharp</h3>
+          <p data-fi="Pieni jengi tarkoittaa nopeita päätöksiä, ei komiteoita, ja jokainen ominaisuus ansaitsee paikkansa.">A tiny crew means fast decisions, no committees, and every feature earns its place.</p>
         </article>
       </div>
     </section>
 
     <section id="roadmap" class="section reveal">
-      <h2><span class="index">04</span> Roadmap</h2>
+      <h2><span class="index">04</span> <span data-fi="Tiekartta">Roadmap</span></h2>
       <ol class="roadmap">
-        <li class="step done"><span class="step-tag">Phase 1</span><h3>Prototype</h3><p>Core mechanics and feel, built fast and thrown away often.</p></li>
-        <li class="step active"><span class="step-tag">Phase 2</span><h3>Playtest</h3><p>Small closed tests with the crew. Feedback drives every build.</p></li>
-        <li class="step"><span class="step-tag">Phase 3</span><h3>Early access</h3><p>Members get builds first, before any public release.</p></li>
-        <li class="step"><span class="step-tag">Phase 4</span><h3>Release</h3><p>Public launch once the game holds up under pressure.</p></li>
+        <li class="step done"><span class="step-tag" data-fi="Vaihe 1">Phase 1</span><h3 data-fi="Prototyyppi">Prototype</h3><p data-fi="Perusmekaniikat ja tuntuma, tehty nopeasti ja heitetty usein pois.">Core mechanics and feel, built fast and thrown away often.</p></li>
+        <li class="step active"><span class="step-tag" data-fi="Vaihe 2">Phase 2</span><h3 data-fi="Pelitestaus">Playtest</h3><p data-fi="Pieniä suljettuja testejä jengin kanssa. Palaute ohjaa jokaista versiota.">Small closed tests with the crew. Feedback drives every build.</p></li>
+        <li class="step"><span class="step-tag" data-fi="Vaihe 3">Phase 3</span><h3 data-fi="Ennakkopääsy">Early access</h3><p data-fi="Jäsenet saavat versiot ensin, ennen julkista julkaisua.">Members get builds first, before any public release.</p></li>
+        <li class="step"><span class="step-tag" data-fi="Vaihe 4">Phase 4</span><h3 data-fi="Julkaisu">Release</h3><p data-fi="Julkinen lanseeraus, kun peli kestää painetta.">Public launch once the game holds up under pressure.</p></li>
       </ol>
     </section>
 
     <section id="devlog" class="section reveal">
-      <h2><span class="index">05</span> Devlog <span class="lock-tag">Members</span></h2>
+      <h2><span class="index">05</span> <span data-fi="Kehityspäiväkirja">Devlog</span> <span class="lock-tag" data-fi="Jäsenille">Members</span></h2>
+      <div id="devlog-teaser" class="teaser hidden"></div>
       <div id="devlog-list" class="devlog"></div>
     </section>
 
     <section id="press" class="section reveal">
-      <h2><span class="index">06</span> Press kit</h2>
+      <h2><span class="index">06</span> <span data-fi="Lehdistömateriaali">Press kit</span></h2>
       <div class="press">
         <div class="press-copy">
-          <p>Double Trouble Studios is a small independent game studio from Finland, building games with Unity. The team prototypes in the open and lets its community shape what ships next.</p>
+          <p data-fi="Double Trouble Studios on pieni itsenäinen pelistudio Suomesta, joka tekee pelejä Unityllä. Tiimi prototypoi avoimesti ja antaa yhteisön vaikuttaa siihen, mitä julkaistaan.">Double Trouble Studios is a small independent game studio from Finland, building games with Unity. The team prototypes in the open and lets its community shape what ships next.</p>
           <dl class="facts">
             <div><dt>Studio</dt><dd>Double Trouble Studios</dd></div>
-            <div><dt>Based in</dt><dd>Finland</dd></div>
-            <div><dt>Engine</dt><dd>Unity</dd></div>
-            <div><dt>Status</dt><dd>Independent, in playtest</dd></div>
-            <div><dt>Press contact</dt><dd><a href="mailto:noah.doubletroublestudios@gmail.com">noah.doubletroublestudios@gmail.com</a></dd></div>
+            <div><dt data-fi="Sijainti">Based in</dt><dd data-fi="Suomi">Finland</dd></div>
+            <div><dt data-fi="Pelimoottori">Engine</dt><dd>Unity</dd></div>
+            <div><dt data-fi="Tila">Status</dt><dd data-fi="Itsenäinen, pelitestauksessa">Independent, in playtest</dd></div>
+            <div><dt data-fi="Lehdistöyhteys">Press contact</dt><dd><a href="mailto:noah.doubletroublestudios@gmail.com">noah.doubletroublestudios@gmail.com</a></dd></div>
           </dl>
-          <a href="logo.jpg" download="double-trouble-studios-logo.jpg" class="btn btn-ghost">Download logo</a>
+          <a href="logo.jpg" download="double-trouble-studios-logo.jpg" class="btn btn-ghost" data-fi="Lataa logo">Download logo</a>
         </div>
-        <div class="press-logo"><img src="logo.jpg" alt="Double Trouble Studios logo"></div>
+        <div class="press-logo"><img src="logo.jpg" alt="Double Trouble Studios logo" width="240" height="240" loading="lazy"></div>
       </div>
     </section>
 
     <section id="faq" class="section reveal">
-      <h2><span class="index">07</span> FAQ</h2>
+      <h2><span class="index">07</span> <span data-fi="UKK">FAQ</span></h2>
       <div class="faq">
         <details>
-          <summary>What do I get by joining the crew?</summary>
-          <p>Access to the devlog, release news and early access invites. Members are the first to hear about new builds.</p>
+          <summary data-fi="Mitä saan liittymällä jengiin?">What do I get by joining the crew?</summary>
+          <p data-fi="Pääsyn kehityspäiväkirjaan, julkaisuuutiset ja ennakkopääsykutsut. Jäsenet kuulevat uusista versioista ensimmäisinä.">Access to the devlog, release news and early access invites. Members are the first to hear about new builds.</p>
         </details>
         <details>
-          <summary>Is it free?</summary>
-          <p>Yes. Joining the crew is free.</p>
+          <summary data-fi="Onko se ilmaista?">Is it free?</summary>
+          <p data-fi="Kyllä. Jengiin liittyminen on ilmaista.">Yes. Joining the crew is free.</p>
         </details>
         <details>
-          <summary>Do I need a password?</summary>
-          <p>No. Enter your email, click the link we send you, and you're signed in on that device.</p>
+          <summary data-fi="Tarvitsenko salasanan?">Do I need a password?</summary>
+          <p data-fi="Ei. Syötä sähköpostisi, klikkaa lähettämäämme linkkiä, niin olet kirjautuneena tällä laitteella.">No. Enter your email, click the link we send you, and you're signed in on that device.</p>
         </details>
         <details>
-          <summary>How often will you email me?</summary>
-          <p>Only when there's something worth sharing. Every email has an unsubscribe link.</p>
+          <summary data-fi="Kuinka usein lähetätte sähköpostia?">How often will you email me?</summary>
+          <p data-fi="Vain kun on jotain jaettavaa. Jokaisessa viestissä on peruutuslinkki.">Only when there's something worth sharing. Every email has an unsubscribe link.</p>
         </details>
         <details>
-          <summary>What do you do with my email?</summary>
-          <p>We use it to send your sign-in link and the updates you signed up for. Nothing else. Details are in the <a href="privacy.html">privacy notice</a>.</p>
+          <summary data-fi="Mitä teette sähköpostiosoitteellani?">What do you do with my email?</summary>
+          <p data-fi="Käytämme sitä kirjautumislinkin ja tilaamiesi päivitysten lähettämiseen. Emme mihinkään muuhun. Lisätiedot ovat <a href='privacy.html'>tietosuojaselosteessa</a>.">We use it to send your sign-in link and the updates you signed up for. Nothing else. Details are in the <a href="privacy.html">privacy notice</a>.</p>
         </details>
         <details>
-          <summary>How do I leave?</summary>
-          <p>Use the unsubscribe link at the bottom of any email. It takes one click.</p>
+          <summary data-fi="Miten voin erota?">How do I leave?</summary>
+          <p data-fi="Käytä minkä tahansa viestin alareunan peruutuslinkkiä. Se vie yhden klikkauksen.">Use the unsubscribe link at the bottom of any email. It takes one click.</p>
         </details>
         <details>
-          <summary>How do I contact the studio?</summary>
-          <p>Use the <a href="contact.html">contact page</a>. We read everything ourselves.</p>
+          <summary data-fi="Miten otan yhteyttä studioon?">How do I contact the studio?</summary>
+          <p data-fi="Käytä <a href='contact.html'>yhteyssivua</a>. Luemme kaiken itse.">Use the <a href="contact.html">contact page</a>. We read everything ourselves.</p>
         </details>
       </div>
     </section>
 
     <section id="crew" class="section subscribe reveal">
-      <h2><span class="index">08</span> Join the crew</h2>
+      <h2><span class="index">08</span> <span data-fi="Liity jengiin">Join the crew</span></h2>
       <p id="member-count" class="member-count hidden"></p>
 
       <div class="crew-grid">
         <ul class="perks guest-only">
-          <li><strong>Members-only devlog</strong><span>Read the dispatches the public never sees.</span></li>
-          <li><strong>Early access invites</strong><span>First in line when a build opens up.</span></li>
-          <li><strong>Shape what ships</strong><span>Playtest news and a say in what we build next.</span></li>
-          <li><strong>No spam, no password</strong><span>One link to sign in. Leave with one click.</span></li>
+          <li><strong data-fi="Vain jäsenille: kehityspäiväkirja">Members-only devlog</strong><span data-fi="Lue tiedotteet, joita yleisö ei näe.">Read the dispatches the public never sees.</span></li>
+          <li><strong data-fi="Ennakkopääsykutsut">Early access invites</strong><span data-fi="Ensimmäisenä jonossa, kun versio aukeaa.">First in line when a build opens up.</span></li>
+          <li><strong data-fi="Vaikuta julkaisuun">Shape what ships</strong><span data-fi="Testiuutisia ja sananvaltaa siihen, mitä teemme seuraavaksi.">Playtest news and a say in what we build next.</span></li>
+          <li><strong data-fi="Ei roskapostia, ei salasanaa">No spam, no password</strong><span data-fi="Yksi linkki kirjautumiseen. Eroat yhdellä klikkauksella.">One link to sign in. Leave with one click.</span></li>
         </ul>
 
         <div>
           <div class="member-panel guest-only" id="guest-panel">
-            <p class="lead">Enter your email. We'll send a link. Click it once and you're signed in on this device, every time you come back.</p>
+            <p class="lead" data-fi="Syötä sähköpostisi. Lähetämme linkin. Klikkaa sitä kerran, niin olet kirjautuneena tällä laitteella aina kun palaat.">Enter your email. We'll send a link. Click it once and you're signed in on this device, every time you come back.</p>
             <div class="signup" data-signup>
               <form class="sub-form" id="sub-form" novalidate>
-                <input type="email" name="email" id="sub-email" placeholder="you@email.com" autocomplete="email" aria-label="Email address" required>
+                <input type="email" name="email" id="sub-email" placeholder="you@email.com" data-fi-placeholder="sinä@posti.fi" autocomplete="email" aria-label="Email address" data-fi-aria="Sähköpostiosoite" required>
                 <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-                <button type="submit" id="sub-btn" class="btn btn-primary"><span class="btn-label">Continue</span></button>
+                <button type="submit" id="sub-btn" class="btn btn-primary"><span class="btn-label" data-fi="Jatka">Continue</span></button>
               </form>
               <p id="sub-status" class="sub-status" role="status" aria-live="polite"></p>
-              <p class="sub-note">By continuing you agree to receive emails from us. See the <a href="privacy.html">privacy notice</a>.</p>
+              <p class="sub-note" data-fi="Jatkamalla suostut vastaanottamaan sähköposteja meiltä. Lue <a href='privacy.html'>tietosuojaseloste</a>.">By continuing you agree to receive emails from us. See the <a href="privacy.html">privacy notice</a>.</p>
               <div class="sub-success hidden">
-                <h3>Check your inbox</h3>
-                <p>We sent a link to <strong class="sub-email-echo"></strong>. Click it to join or sign in.</p>
-                <p class="sub-hint">Nothing yet? Check spam, or <button type="button" class="link-btn sub-resend" disabled>resend in <span class="count">30</span>s</button> &middot; <button type="button" class="link-btn sub-change">use a different email</button></p>
+                <h3 data-fi="Tarkista postilaatikkosi">Check your inbox</h3>
+                <p><span data-fi="Lähetimme linkin osoitteeseen">We sent a link to</span> <strong class="sub-email-echo"></strong>. <span data-fi="Klikkaa sitä liittyäksesi tai kirjautuaksesi.">Click it to join or sign in.</span></p>
+                <p class="sub-hint"><span data-fi="Ei mitään? Tarkista roskaposti tai">Nothing yet? Check spam, or</span> <button type="button" class="link-btn sub-resend" disabled>resend in <span class="count">30</span>s</button> &middot; <button type="button" class="link-btn sub-change" data-fi="käytä toista sähköpostia">use a different email</button></p>
               </div>
             </div>
           </div>
@@ -228,10 +233,10 @@
               <div>
                 <h3 id="member-title">Welcome back</h3>
                 <p style="margin:2px 0 0; color:var(--muted); font-size:0.9rem;" id="member-email"></p>
-                <span class="member-badge">Early access unlocked</span>
+                <span class="member-badge" data-fi="Ennakkopääsy auki">Early access unlocked</span>
               </div>
             </div>
-            <button class="member-logout" id="member-logout">Log out</button>
+            <button class="member-logout" id="member-logout" data-fi="Kirjaudu ulos">Log out</button>
           </div>
         </div>
       </div>
@@ -240,20 +245,20 @@
     <section class="cta-band guest-only">
       <div class="cta-inner">
         <div>
-          <h2>Don't miss a drop.</h2>
-          <p>New builds and devlogs go to the crew first.</p>
+          <h2 data-fi="Älä missaa julkaisua.">Don't miss a drop.</h2>
+          <p data-fi="Uudet versiot ja kehityspäiväkirjat menevät ensin jengille.">New builds and devlogs go to the crew first.</p>
         </div>
         <div class="signup signup-inline" data-signup>
           <form class="sub-form" novalidate>
-            <input type="email" name="email" placeholder="Your email" autocomplete="email" aria-label="Email address" required>
+            <input type="email" name="email" placeholder="Your email" data-fi-placeholder="Sähköpostisi" autocomplete="email" aria-label="Email address" data-fi-aria="Sähköpostiosoite" required>
             <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-            <button type="submit" class="btn btn-primary"><span class="btn-label">Join the crew</span></button>
+            <button type="submit" class="btn btn-primary"><span class="btn-label" data-fi="Liity jengiin">Join the crew</span></button>
           </form>
           <p class="sub-status" role="status" aria-live="polite"></p>
           <div class="sub-success hidden">
-            <h3>Check your inbox</h3>
-            <p>We sent a link to <strong class="sub-email-echo"></strong>.</p>
-            <p class="sub-hint"><button type="button" class="link-btn sub-resend" disabled>resend in <span class="count">30</span>s</button> &middot; <button type="button" class="link-btn sub-change">use a different email</button></p>
+            <h3 data-fi="Tarkista postilaatikkosi">Check your inbox</h3>
+            <p><span data-fi="Lähetimme linkin osoitteeseen">We sent a link to</span> <strong class="sub-email-echo"></strong>.</p>
+            <p class="sub-hint"><button type="button" class="link-btn sub-resend" disabled>resend in <span class="count">30</span>s</button> &middot; <button type="button" class="link-btn sub-change" data-fi="käytä toista sähköpostia">use a different email</button></p>
           </div>
         </div>
       </div>
@@ -267,7 +272,8 @@
           <img src="logo.jpg" alt="">
           <span>DOUBLE TROUBLE <em>STUDIOS</em></span>
         </a>
-        <p>An independent game studio from Finland. Built in the open.</p>
+        <p data-fi="Itsenäinen pelistudio Suomesta. Tehty avoimesti.">An independent game studio from Finland. Built in the open.</p>
+        <button type="button" class="btn btn-ghost share-btn" data-share data-fi="Jaa sivu">Share the site</button>
       </div>
       <div>
         <h4>Explore</h4>
@@ -286,9 +292,11 @@
     </div>
     <div class="site-footer-bottom">
       <span>&copy; 2026 Double Trouble Studios</span>
-      <span>Made in Finland</span>
+      <span data-fi="Tehty Suomessa">Made in Finland</span>
     </div>
   </footer>
+
+  <a class="mobile-cta guest-only" href="#crew" data-fi="Liity jengiin">Join the crew</a>
 
   <script src="nav.js"></script>
   <script src="script.js"></script>

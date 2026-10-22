@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-fi-title="Double Trouble Studios">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Double Trouble Studios</title>
   <meta name="theme-color" content="#08080a">
   <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="icon" href="logo.jpg">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -22,23 +24,25 @@
     </div>
   </nav>
 
-  <main class="confirm-wrap">
+  <main id="main" class="confirm-wrap">
     <img src="logo.jpg" alt="Double Trouble Studios">
     <p class="eyebrow" id="confirm-eyebrow">One moment</p>
     <h1 id="confirm-title">Verifying...</h1>
     <p id="confirm-desc">Checking your link.</p>
-    <a href="index.html" class="btn btn-primary">Back to site</a>
+    <a href="index.html" class="btn btn-primary" data-fi="Takaisin sivustolle">Back to site</a>
   </main>
 
   <footer class="footer">
     <span>&copy; 2026 Double Trouble Studios</span>
   </footer>
 
+  <script src="nav.js"></script>
   <script>
     const SUPA_URL = "https://xemwnccaqxnttrabdayh.supabase.co";
     const SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlbXduY2NhcXhudHRyYWJkYXloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0NTczMTksImV4cCI6MjEwNjAzMzMxOX0.mawkXgP9IrL0_Yhj3OiW94v6LwthNrzJfFIwsUVRCIM";
     const db = supabase.createClient(SUPA_URL, SUPA_KEY);
     const SESSION_KEY = "dts_session";
+    const T = (en, fi) => (window.dtT ? window.dtT(en, fi) : en);
 
     function setResult(eyebrow, title, desc) {
       document.getElementById("confirm-eyebrow").textContent = eyebrow;
@@ -47,23 +51,23 @@
     }
 
     async function handleUnsubscribe(unsubToken) {
-      setResult("Unsubscribing", "One moment...", "Removing you from the list.");
+      setResult(T("Unsubscribing", "Perutaan tilausta"), T("One moment...", "Hetki..."), T("Removing you from the list.", "Poistetaan sinua listalta."));
       const { data, error } = await db.rpc("unsubscribe", { token_input: unsubToken });
 
       if (error || data !== true) {
-        setResult("Unsubscribe", "Link expired", "This unsubscribe link is invalid or was already used.");
+        setResult(T("Unsubscribe", "Tilauksen peruutus"), T("Link expired", "Linkki vanhentunut"), T("This unsubscribe link is invalid or was already used.", "Tämä peruutuslinkki on virheellinen tai se on jo käytetty."));
         return;
       }
 
       try { localStorage.removeItem(SESSION_KEY); } catch {}
-      setResult("Unsubscribed", "You're off the list", "Sorry to see you go. You can always join again from the main page.");
+      setResult(T("Unsubscribed", "Tilaus peruttu"), T("You're off the list", "Olet poistunut listalta"), T("Sorry to see you go. You can always join again from the main page.", "Harmi nähdä sinun lähtevän. Voit aina liittyä uudelleen etusivulta."));
     }
 
     async function handleMagicLink(token) {
       const { data, error } = await db.rpc("verify_magic_link", { token_input: token });
 
       if (error || !data || !data.ok) {
-        setResult("Email verification", "Link expired", "This link is invalid or was already used. Head back to the main page to get a new one.");
+        setResult(T("Email verification", "Sähköpostin vahvistus"), T("Link expired", "Linkki vanhentunut"), T("This link is invalid or was already used. Head back to the main page to get a new one.", "Tämä linkki on virheellinen tai se on jo käytetty. Palaa etusivulle hakemaan uusi."));
         return;
       }
 
@@ -75,9 +79,9 @@
       } catch { /* private mode — session just won't persist across visits */ }
 
       if (data.welcome) {
-        setResult("Email verification", "You're in! 🎮", "Your email is confirmed and you're signed in on this device. Welcome aboard — devlogs and early access news are coming your way.");
+        setResult(T("Email verification", "Sähköpostin vahvistus"), T("You're in! 🎮", "Olet mukana! 🎮"), T("Your email is confirmed and you're signed in on this device. Welcome aboard. Devlogs and early access news are coming your way.", "Sähköpostisi on vahvistettu ja olet kirjautuneena tällä laitteella. Tervetuloa mukaan. Kehityspäiväkirjat ja ennakkopääsyuutiset tulevat tiellesi."));
       } else {
-        setResult("Signed in", "Welcome back! 🎮", "You're signed in on this device. Head back to the site to see what's new.");
+        setResult(T("Signed in", "Kirjautunut"), T("Welcome back! 🎮", "Tervetuloa takaisin! 🎮"), T("You're signed in on this device. Head back to the site to see what's new.", "Olet kirjautuneena tällä laitteella. Palaa sivustolle katsomaan mitä uutta on."));
       }
     }
 
@@ -92,7 +96,7 @@
       }
 
       if (!token) {
-        setResult("Invalid link", "Invalid link", "This link is missing its token. Please use the link from your email.");
+        setResult(T("Invalid link", "Virheellinen linkki"), T("Invalid link", "Virheellinen linkki"), T("This link is missing its token. Please use the link from your email.", "Linkistä puuttuu tunniste. Käytä sähköpostissasi olevaa linkkiä."));
         return;
       }
 
@@ -101,6 +105,5 @@
 
     run();
   </script>
-  <script src="nav.js"></script>
 </body>
 </html>
